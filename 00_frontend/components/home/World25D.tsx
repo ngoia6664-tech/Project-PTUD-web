@@ -1,10 +1,12 @@
 "use client";
-
+import { Introduction } from "./sections/Introduction";
+import Study from "./sections/Study";
+import News from "./sections/News";
 import { useEffect, useRef } from "react";
 const allSection = [
-  { id: 1, text: "Mở đầu" },
-  { id: 2, text: "Ở giữa" },
-  { id: 3, text: "cuối cùng" },
+  { id: 1, Component:Introduction , title:"Học hết mình Chơi cùng nhau" , description:"Không gian dành cho KMA học tập , chia sẻ và kết nối cùng nhau" },
+  { id: 2, Component:Study ,title:"Học tập" , description:"Ba công cụ để nối với nhau , tính điểm , xem chương trình học của ngành , biết được mình đã học tới đâu"},
+  { id: 3, Component:News, title:"Tin tức KMA" , description:"Thông báo ,tin học vụ và thời hạn các nguồn từ học viện , gom về một chỗ , một tin ghi rõ nguồn và link bài gốc" },
 ];
 const DEPTH = 2000;
 const TONG = (allSection.length - 1) * 2000;
@@ -74,11 +76,11 @@ export default function World25D() {
               alignItems: "center",
               justifyContent: "center",
               color: "white",
-              fontSize: 48,
+              fontSize: 30,
               opacity: 0,
             }}
           >
-            {section.text}
+            <section.Component title={section.title} description={section.description}/>
           </div>
         ))}
       </div>
