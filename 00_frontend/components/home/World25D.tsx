@@ -35,10 +35,13 @@ export default function World25D() {
           if (!el) return;
           const z = -i * DEPTH + currentProcess.current * TONG;
           el.style.transform = `translate3d(0,0, ${z}px)`;
-          el.style.opacity = String(Math.max(0, 1 - Math.abs(z) / VUNG));
+          const opacity = Math.max(0, 1 - Math.abs(z) / VUNG) // Tính độ mờ , rõ theo khoảng cách
+          el.style.opacity = String(opacity);
+          el.style.pointerEvents = opacity > 0.5 ? "auto" :"none"; // nếu độ mờ > 0.5 thì tương tác sự kiện được , nếu không thì chặn sự kiện
         });
       }
     }
+    
     window.addEventListener("scroll", xulicuon);
     xulicuon();
     frameId = requestAnimationFrame(veMotKhung);
@@ -47,6 +50,11 @@ export default function World25D() {
       cancelAnimationFrame(frameId);
     };
   }, []);
+  function goToSection(index:number){
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (index*DEPTH)/TONG;
+      window.scrollTo({top:progress * maxScroll , behavior:"smooth"}) 
+    }
   return (
     <div className="home-track" style={{ height: "300vh" }}>
       <div
@@ -78,9 +86,11 @@ export default function World25D() {
               color: "white",
               fontSize: 30,
               opacity: 0,
+              border:"2px solid white",
+              padding:"12px",
             }}
           >
-            <section.Component title={section.title} description={section.description}/>
+            <section.Component title={section.title} description={section.description} goToSection={goToSection}/>
           </div>
         ))}
       </div>

@@ -1,7 +1,8 @@
 export default function BtnSections(props:{
-    name:string
+    name:string,
+    onClick?:() => void
 }){
     return (
-        <button className="home-btn-section">{props.name}</button>
+        <button className="home-btn-section"  onClick={props.onClick}>{props.name}</button>
     )
 }
