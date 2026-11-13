@@ -1,5 +1,6 @@
 export type SectionProps = {
   title: string;
   description: string;
-  goToSection: (index:number) => void ,
+  goToSection: (index: number) => void;
+  isActive?: boolean;
 };
