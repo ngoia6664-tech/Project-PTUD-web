@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, type ReactNode } from "react";
-
+//file này để thêm hiệu ứng hover 3d cho các card , mục đích là UI
 export default function TiltCard({
   className = "",
   children,
