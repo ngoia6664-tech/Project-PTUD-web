@@ -4,6 +4,12 @@ import { useState } from "react";
 import { Info, Pencil, Trash2 } from "lucide-react";
 import AdminScheduleForm from "@/components/admin/AdminScheduleForm";
 import AdminMakeupNoticeForm from "@/components/admin/AdminMakeupNoticeForm";
+import {
+  DataSkeleton,
+  EmptyState,
+  ErrorState,
+} from "@/components/ui/DataStates";
+import { useDemoState } from "@/components/ui/useDemoState";
 import { WEEK_DAYS } from "@/lib/mock/dashboard";
 import {
   ADMIN_CLASS_OPTIONS,
@@ -16,11 +22,11 @@ import {
 /**
  * Trang Quản lý Lịch học chung (/admin/schedule).
  * GHI CHÚ QUAN TRỌNG: nhóm chưa chốt lịch do sinh viên tự nhập hay admin nhập.
- * Hiện tại dựng sẵn đầy đủ giao diện quản trị lịch lớp + nhập CSV + soạn thông báo nghỉ/dạy bù
- * để đội dự án dễ thống nhất quy trình sau này.
+ * Hỗ trợ trạng thái dữ liệu qua ?demo=loading|empty|error.
  */
 export default function AdminSchedulePage() {
   // nhóm chưa chốt lịch do sinh viên tự nhập hay admin nhập
+  const { demoMode, retryDemo } = useDemoState();
   const [selectedClass, setSelectedClass] = useState<string>(
     ADMIN_CLASS_OPTIONS[0],
   );
@@ -97,7 +103,6 @@ export default function AdminSchedulePage() {
         </div>
       </div>
 
-      {/* Ghi chú quy trình đang chờ nhóm thống nhất */}
       <div className="admin-note-banner">
         <Info size={18} style={{ flex: "none", marginTop: 2 }} />
         <span>
@@ -111,103 +116,120 @@ export default function AdminSchedulePage() {
         </div>
       )}
 
-      {/* Bảng danh sách buổi học của lớp đang chọn */}
-      <section className="admin-card">
-        <div className="admin-card-head">
-          <h3 className="admin-card-title">
-            Danh sách buổi học — Lớp {selectedClass}
-          </h3>
-          <span className="admin-badge admin-badge--gold admin-num">
-            {classEvents.length} buổi/tuần
-          </span>
-        </div>
+      {demoMode === "loading" ? (
+        <DataSkeleton variant="table" count={4} />
+      ) : demoMode === "error" ? (
+        <ErrorState
+          title="Không thể tải lịch học của lớp"
+          message="Đã có lỗi khi tải thời khóa biểu từ hệ thống quản trị. Vui lòng thử lại."
+          onRetry={retryDemo}
+        />
+      ) : demoMode === "empty" ? (
+        <EmptyState
+          title={`Lớp ${selectedClass} chưa có lịch học`}
+          description="Bạn có thể nhập tệp CSV thời khóa biểu hoặc thêm từng buổi học mới."
+          actionLabel="Tải lại lịch mẫu"
+          onAction={retryDemo}
+        />
+      ) : (
+        <>
+          <section className="admin-card">
+            <div className="admin-card-head">
+              <h3 className="admin-card-title">
+                Danh sách buổi học — Lớp {selectedClass}
+              </h3>
+              <span className="admin-badge admin-badge--gold admin-num">
+                {classEvents.length} buổi/tuần
+              </span>
+            </div>
 
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Mã HP</th>
-                <th>Tên học phần</th>
-                <th>Thứ</th>
-                <th>Khung giờ</th>
-                <th>Phòng</th>
-                <th>Giảng viên</th>
-                <th style={{ width: 140 }}>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {classEvents.length === 0 ? (
-                <tr>
-                  <td colSpan={7} style={{ textAlign: "center", color: "#5c5249", padding: 24 }}>
-                    Lớp {selectedClass} chưa có buổi học nào.
-                  </td>
-                </tr>
-              ) : (
-                classEvents.map((ev) => {
-                  const dayLabel =
-                    WEEK_DAYS.find((d) => d.day === ev.dayOfWeek)?.label ?? "";
-                  return (
-                    <tr key={ev.id}>
-                      <td style={{ fontWeight: 700, color: "#8b1218" }}>
-                        {ev.courseCode}
-                      </td>
-                      <td style={{ fontWeight: 600 }}>{ev.courseName}</td>
-                      <td>{dayLabel}</td>
-                      <td className="admin-num">
-                        Tiết {ev.startPeriod}–{ev.endPeriod} ({ev.startTime}–{ev.endTime})
-                      </td>
-                      <td>{ev.room}</td>
-                      <td>{ev.lecturer}</td>
-                      <td>
-                        <div style={{ display: "flex", gap: 6 }}>
-                          <button
-                            type="button"
-                            className="admin-btn admin-btn--sm"
-                            onClick={() => setEditingEvent(ev)}
-                          >
-                            <Pencil size={13} />
-                            Sửa
-                          </button>
-                          <button
-                            type="button"
-                            className="admin-btn admin-btn--danger admin-btn--sm"
-                            onClick={() => handleDeleteEvent(ev.id)}
-                          >
-                            <Trash2 size={13} />
-                            Xóa
-                          </button>
-                        </div>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Mã HP</th>
+                    <th>Tên học phần</th>
+                    <th>Thứ</th>
+                    <th>Khung giờ</th>
+                    <th>Phòng</th>
+                    <th>Giảng viên</th>
+                    <th style={{ width: 140 }}>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {classEvents.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} style={{ textAlign: "center", color: "#5c5249", padding: 24 }}>
+                        Lớp {selectedClass} chưa có buổi học nào.
                       </td>
                     </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
+                  ) : (
+                    classEvents.map((ev) => {
+                      const dayLabel =
+                        WEEK_DAYS.find((d) => d.day === ev.dayOfWeek)?.label ?? "";
+                      return (
+                        <tr key={ev.id}>
+                          <td style={{ fontWeight: 700, color: "#8b1218" }}>
+                            {ev.courseCode}
+                          </td>
+                          <td style={{ fontWeight: 600 }}>{ev.courseName}</td>
+                          <td>{dayLabel}</td>
+                          <td className="admin-num">
+                            Tiết {ev.startPeriod}–{ev.endPeriod} ({ev.startTime}–{ev.endTime})
+                          </td>
+                          <td>{ev.room}</td>
+                          <td>{ev.lecturer}</td>
+                          <td>
+                            <div style={{ display: "flex", gap: 6 }}>
+                              <button
+                                type="button"
+                                className="admin-btn admin-btn--sm"
+                                onClick={() => setEditingEvent(ev)}
+                              >
+                                <Pencil size={13} />
+                                Sửa
+                              </button>
+                              <button
+                                type="button"
+                                className="admin-btn admin-btn--danger admin-btn--sm"
+                                onClick={() => handleDeleteEvent(ev.id)}
+                              >
+                                <Trash2 size={13} />
+                                Xóa
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
 
-      {/* Form thêm/sửa buổi + Khung soạn thông báo nghỉ/dạy bù */}
-      <div className="admin-two-col">
-        <AdminScheduleForm
-          key={editingEvent?.id ?? selectedClass}
-          selectedClass={selectedClass}
-          initialEvent={editingEvent}
-          onSave={handleSaveEvent}
-          onCancelEdit={() => setEditingEvent(null)}
-          onCsvSelected={(fileName) =>
-            showToast(
-              `Đã chọn tệp CSV "${fileName}" (giao diện mẫu, chưa import backend).`,
-            )
-          }
-        />
+          <div className="admin-two-col">
+            <AdminScheduleForm
+              key={editingEvent?.id ?? selectedClass}
+              selectedClass={selectedClass}
+              initialEvent={editingEvent}
+              onSave={handleSaveEvent}
+              onCancelEdit={() => setEditingEvent(null)}
+              onCsvSelected={(fileName) =>
+                showToast(
+                  `Đã chọn tệp CSV "${fileName}" (giao diện mẫu, chưa import backend).`,
+                )
+              }
+            />
 
-        <AdminMakeupNoticeForm
-          selectedClass={selectedClass}
-          notices={notices}
-          onPublishNotice={handlePublishNotice}
-        />
-      </div>
+            <AdminMakeupNoticeForm
+              selectedClass={selectedClass}
+              notices={notices}
+              onPublishNotice={handlePublishNotice}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }

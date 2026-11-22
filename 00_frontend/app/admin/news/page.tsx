@@ -3,6 +3,12 @@
 import { useState } from "react";
 import AdminNewsTable from "@/components/admin/AdminNewsTable";
 import AdminNewsSourceConfig from "@/components/admin/AdminNewsSourceConfig";
+import {
+  DataSkeleton,
+  EmptyState,
+  ErrorState,
+} from "@/components/ui/DataStates";
+import { useDemoState } from "@/components/ui/useDemoState";
 import type { NewsCategory } from "@/lib/mock/dashboard";
 import {
   MOCK_ADMIN_NEWS_RESPONSE,
@@ -13,9 +19,10 @@ import {
 
 /**
  * Trang Quản lý Tin tức & Nguồn tin (/admin/news).
- * Nút "Kéo tin ngay" chỉ mô phỏng trên giao diện, chưa gọi crawler thật.
+ * Hỗ trợ trạng thái dữ liệu qua ?demo=loading|empty|error.
  */
 export default function AdminNewsPage() {
+  const { demoMode, retryDemo } = useDemoState();
   const [newsList, setNewsList] = useState<AdminNewsItem[]>(
     MOCK_ADMIN_NEWS_RESPONSE.data,
   );
@@ -115,23 +122,40 @@ export default function AdminNewsPage() {
         </div>
       )}
 
-      <div className="admin-two-col">
-        <AdminNewsTable
-          items={newsList}
-          onToggleVisible={handleToggleVisible}
-          onTogglePinned={handleTogglePinned}
-          onChangeCategory={handleChangeCategory}
+      {demoMode === "loading" ? (
+        <DataSkeleton variant="table" count={5} />
+      ) : demoMode === "error" ? (
+        <ErrorState
+          title="Không thể tải danh sách tin tức"
+          message="Hệ thống chưa lấy được dữ liệu từ bảng tin quản trị. Vui lòng thử lại."
+          onRetry={retryDemo}
         />
+      ) : demoMode === "empty" ? (
+        <EmptyState
+          title="Chưa có bản tin nào được kéo về"
+          description="Nhấn Kéo tin ngay hoặc kiểm tra cấu hình nguồn tin để đồng bộ bài viết mới."
+          actionLabel="Tải lại dữ liệu mẫu"
+          onAction={retryDemo}
+        />
+      ) : (
+        <div className="admin-two-col">
+          <AdminNewsTable
+            items={newsList}
+            onToggleVisible={handleToggleVisible}
+            onTogglePinned={handleTogglePinned}
+            onChangeCategory={handleChangeCategory}
+          />
 
-        <AdminNewsSourceConfig
-          sources={sources}
-          onToggleSource={handleToggleSource}
-          onUpdateInterval={handleUpdateInterval}
-          onAddSource={handleAddSource}
-          onTriggerCrawl={handleTriggerCrawl}
-          isCrawling={isCrawling}
-        />
-      </div>
+          <AdminNewsSourceConfig
+            sources={sources}
+            onToggleSource={handleToggleSource}
+            onUpdateInterval={handleUpdateInterval}
+            onAddSource={handleAddSource}
+            onTriggerCrawl={handleTriggerCrawl}
+            isCrawling={isCrawling}
+          />
+        </div>
+      )}
     </div>
   );
 }

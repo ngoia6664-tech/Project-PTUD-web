@@ -1,13 +1,17 @@
+"use client";
+
 import { BarChart3, PieChart } from "lucide-react";
+import AnimatedNumber from "@/components/ui/AnimatedNumber";
+import { useInViewOnce } from "@/components/ui/useInViewOnce";
 import type {
   CategoryDistributionPoint,
   MonthlyGrowthPoint,
 } from "@/lib/mock/admin";
 
 /**
- * 2 biểu đồ đơn giản tự dựng bằng SVG & CSS thuần (không dùng thư viện biểu đồ ngoài):
- * 1. Biểu đồ cột + nhãn số: Người dùng mới theo 6 tháng gần nhất
- * 2. Biểu đồ phân bổ tài liệu theo nhóm ngành (vòng tròn SVG + thanh tỷ lệ ngang)
+ * 2 biểu đồ SVG thuần (không thư viện ngoài) vẽ dần ĐÚNG MỘT LẦN khi cuộn tới (IntersectionObserver):
+ * 1. "Người dùng mới 6 tháng": cột mọc từ đáy so le 60ms + đường xu hướng stroke-dashoffset + vùng tô + điểm nảy.
+ * 2. "Tài liệu theo khối ngành": donut vẽ từng cung theo stroke-dashoffset; số giữa donut tính trực tiếp từ dữ liệu.
  */
 
 interface AdminChartsProps {
@@ -19,10 +23,38 @@ export default function AdminCharts({
   growth,
   distribution,
 }: AdminChartsProps) {
-  const maxNewUsers = Math.max(...growth.map((g) => g.newUsers), 1);
-  const totalDocs = distribution.reduce((sum, d) => sum + d.count, 0) || 1;
+  const { ref: sectionRef, inView } = useInViewOnce<HTMLElement>(0.18);
 
-  // Tính đoạn strokeDasharray & strokeDashoffset cho vòng tròn SVG phân bổ ngành
+  const maxNewUsers = Math.max(...growth.map((g) => g.newUsers), 1);
+  const totalDocs = distribution.reduce((sum, d) => sum + d.count, 0);
+  const safeTotalDocs = totalDocs || 1;
+
+  // Tọa độ cột và đường xu hướng cho Biểu đồ 1
+  const points = growth.map((point, index) => {
+    const barWidth = 36;
+    const gap = 72;
+    const x = 44 + index * gap;
+    const barHeight = Math.round((point.newUsers / maxNewUsers) * 132);
+    const y = 180 - barHeight;
+    return {
+      ...point,
+      x,
+      barWidth,
+      barHeight,
+      y,
+      cx: x + barWidth / 2,
+    };
+  });
+
+  const linePath = points
+    .map((p, idx) => `${idx === 0 ? "M" : "L"}${p.cx} ${p.y}`)
+    .join(" ");
+  const areaPath =
+    points.length > 0
+      ? `${linePath} L${points[points.length - 1].cx} 180 L${points[0].cx} 180 Z`
+      : "";
+
+  // Tính từng cung tròn donut từ dữ liệu thật (không gắn chữ "100%" cứng)
   const segments = distribution.reduce<
     {
       label: string;
@@ -34,21 +66,25 @@ export default function AdminCharts({
   >((acc, item) => {
     const prevEnd =
       acc.length > 0 ? acc[acc.length - 1].offset + acc[acc.length - 1].percent : 0;
-    const percent = (item.count / totalDocs) * 100;
+    const percent = (item.count / safeTotalDocs) * 100;
     acc.push({ ...item, percent, offset: prevEnd });
     return acc;
   }, []);
 
   return (
-    <section className="admin-charts-grid" aria-label="Biểu đồ thống kê hệ thống">
-      {/* Biểu đồ 1: Biểu đồ cột SVG thuần - Người dùng mới theo tháng */}
+    <section
+      ref={sectionRef}
+      className="admin-charts-grid"
+      aria-label="Biểu đồ thống kê hệ thống"
+    >
+      {/* Biểu đồ 1: Cột mọc so le 60ms + đường xu hướng vẽ dần */}
       <article className="admin-card">
         <div className="admin-card-head">
           <h2 className="admin-card-title">
-            <BarChart3 size={19} color="#8b1218" />
+            <BarChart3 size={19} color="#8b1218" strokeWidth={1.75} />
             Người dùng mới 6 tháng gần đây
           </h2>
-          <span className="admin-badge admin-badge--gold">SVG thuần</span>
+          <span className="admin-badge admin-badge--gold">Xu hướng tăng</span>
         </div>
 
         <svg
@@ -56,11 +92,17 @@ export default function AdminCharts({
           width="100%"
           height="220"
           role="img"
-          aria-label="Biểu đồ cột số lượng người dùng mới từ tháng 6 đến tháng 11"
+          aria-label="Biểu đồ cột và đường xu hướng người dùng mới 6 tháng gần đây"
         >
-          {/* Đường lưới ngang */}
+          <defs>
+            <linearGradient id="adminGrowthArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#8b1218" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="#8b1218" stopOpacity="0.01" />
+            </linearGradient>
+          </defs>
+
           {[0, 0.25, 0.5, 0.75, 1].map((ratio) => {
-            const y = 180 - ratio * 145;
+            const y = 180 - ratio * 136;
             return (
               <line
                 key={ratio}
@@ -68,43 +110,37 @@ export default function AdminCharts({
                 y1={y}
                 x2="462"
                 y2={y}
-                stroke="#eadfce"
+                stroke="#e7dccb"
                 strokeDasharray="4 4"
               />
             );
           })}
 
-          {growth.map((point, index) => {
-            const barWidth = 42;
-            const gap = 72;
-            const x = 44 + index * gap;
-            const barHeight = Math.round((point.newUsers / maxNewUsers) * 138);
-            const y = 180 - barHeight;
-            const isLatest = index === growth.length - 1;
+          {areaPath && (
+            <path
+              d={areaPath}
+              fill="url(#adminGrowthArea)"
+              className={`kma-svg-area ${inView ? "kma-svg-area--visible" : ""}`}
+            />
+          )}
 
+          {points.map((point, index) => {
+            const isLatest = index === points.length - 1;
             return (
               <g key={point.month}>
                 <rect
-                  x={x}
-                  y={y}
-                  width={barWidth}
-                  height={barHeight}
-                  rx="8"
-                  fill={isLatest ? "#8b1218" : "#c79a4b"}
+                  x={point.x}
+                  y={point.y}
+                  width={point.barWidth}
+                  height={point.barHeight}
+                  rx="7"
+                  fill={isLatest ? "#8b1218" : "#d8b46d"}
+                  className={`kma-svg-bar ${inView ? "kma-svg-bar--visible" : ""}`}
+                  style={{ animationDelay: `${index * 60}ms` }}
                 />
                 <text
-                  x={x + barWidth / 2}
-                  y={y - 7}
-                  textAnchor="middle"
-                  fontSize="12"
-                  fontWeight="700"
-                  fill="#1e1916"
-                >
-                  {point.newUsers}
-                </text>
-                <text
-                  x={x + barWidth / 2}
-                  y="202"
+                  x={point.cx}
+                  y="204"
                   textAnchor="middle"
                   fontSize="12"
                   fontWeight="600"
@@ -115,15 +151,53 @@ export default function AdminCharts({
               </g>
             );
           })}
+
+          {linePath && (
+            <path
+              d={linePath}
+              fill="none"
+              stroke="#6b0c11"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              pathLength={1}
+              className={`kma-svg-line ${inView ? "kma-svg-line--visible" : ""}`}
+            />
+          )}
+
+          {points.map((point, index) => (
+            <g key={`dot-${point.month}`}>
+              <circle
+                cx={point.cx}
+                cy={point.y}
+                r="4.5"
+                fill="#fffdf9"
+                stroke="#8b1218"
+                strokeWidth="2.4"
+                className={`kma-svg-dot ${inView ? "kma-svg-dot--visible" : ""}`}
+                style={{ animationDelay: `${340 + index * 70}ms` }}
+              />
+              <text
+                x={point.cx}
+                y={point.y - 10}
+                textAnchor="middle"
+                fontSize="11.5"
+                fontWeight="700"
+                fill="#1e1916"
+              >
+                {point.newUsers}
+              </text>
+            </g>
+          ))}
         </svg>
       </article>
 
-      {/* Biểu đồ 2: Vòng tròn SVG + thanh ngang phân bổ tài liệu theo ngành */}
+      {/* Biểu đồ 2: Donut vẽ từng cung bằng stroke-dashoffset; số giữa tính từ dữ liệu */}
       <article className="admin-card">
         <div className="admin-card-head">
           <h2 className="admin-card-title">
-            <PieChart size={19} color="#8b1218" />
-            Phân bổ tài liệu theo khối ngành
+            <PieChart size={19} color="#8b1218" strokeWidth={1.75} />
+            Tài liệu theo khối ngành
           </h2>
           <span className="admin-badge admin-badge--crimson-soft admin-num">
             {totalDocs.toLocaleString("vi-VN")} tài liệu
@@ -133,7 +207,7 @@ export default function AdminCharts({
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "136px 1fr",
+            gridTemplateColumns: "144px 1fr",
             gap: 18,
             alignItems: "center",
           }}
@@ -141,13 +215,13 @@ export default function AdminCharts({
           <div
             style={{
               position: "relative",
-              width: 132,
-              height: 132,
+              width: 140,
+              height: 140,
               display: "grid",
               placeItems: "center",
             }}
           >
-            <svg viewBox="0 0 120 120" width="132" height="132" aria-hidden="true">
+            <svg viewBox="0 0 120 120" width="140" height="140" aria-hidden="true">
               <circle
                 cx="60"
                 cy="60"
@@ -156,7 +230,7 @@ export default function AdminCharts({
                 stroke="#ede3d3"
                 strokeWidth="14"
               />
-              {segments.map((seg) => (
+              {segments.map((seg, idx) => (
                 <circle
                   key={seg.label}
                   cx="60"
@@ -166,24 +240,26 @@ export default function AdminCharts({
                   stroke={seg.color}
                   strokeWidth="14"
                   pathLength={100}
-                  strokeDasharray={`${seg.percent} ${100 - seg.percent}`}
-                  strokeDashoffset={-seg.offset}
+                  strokeDasharray={`${seg.percent} 100`}
+                  strokeDashoffset={inView ? -seg.offset : 100}
                   transform="rotate(-90 60 60)"
+                  className="kma-svg-arc"
+                  style={{ transitionDelay: `${idx * 120}ms` }}
                 />
               ))}
             </svg>
-            <div style={{ position: "absolute", textAlign: "center" }}>
-              <strong className="admin-num" style={{ fontSize: "1.15rem" }}>
-                100%
+            <div style={{ position: "absolute", textAlign: "center", lineHeight: 1.2 }}>
+              <strong className="admin-num" style={{ fontSize: "1.1rem", color: "#1e1916" }}>
+                <AnimatedNumber value={totalDocs} locale />
               </strong>
               <span
                 style={{
                   display: "block",
-                  fontSize: "0.7rem",
+                  fontSize: "0.72rem",
                   color: "#5c5249",
                 }}
               >
-                Thư viện
+                tài liệu
               </span>
             </div>
           </div>
@@ -208,7 +284,7 @@ export default function AdminCharts({
                   <div
                     className="admin-bar-fill"
                     style={{
-                      width: `${seg.percent}%`,
+                      width: `${inView ? seg.percent : 0}%`,
                       backgroundColor: seg.color,
                     }}
                   />

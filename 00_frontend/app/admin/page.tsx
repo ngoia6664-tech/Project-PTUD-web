@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, FolderKanban, Newspaper } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  CalendarDays,
+  FolderKanban,
+  Newspaper,
+} from "lucide-react";
 import AdminOverviewStats from "@/components/admin/AdminOverviewStats";
 import AdminCharts from "@/components/admin/AdminCharts";
 import {
@@ -11,8 +17,9 @@ import {
 } from "@/lib/mock/admin";
 
 /**
- * Trang Tổng quan Quản trị (/admin).
- * Hiển thị 4 thẻ chỉ số, 2 biểu đồ SVG thuần và lối tắt xử lý nhanh.
+ * Trang Tổng quan Quản trị (/admin) theo đặc tả B1:
+ * 4 KPI đếm số, 2 biểu đồ vẽ dần (Người dùng mới 6 tháng & Tài liệu theo khối ngành),
+ * và khối "Cần xử lý" kèm lối tắt sang duyệt tài liệu & quản lý tin.
  */
 export default function AdminOverviewPage() {
   const stats = MOCK_ADMIN_OVERVIEW_RESPONSE.data;
@@ -21,6 +28,9 @@ export default function AdminOverviewPage() {
   const pendingDocs = MOCK_ADMIN_LIBRARY_RESPONSE.data.filter(
     (d) => d.status === "pending",
   );
+  const hiddenNewsCount = MOCK_ADMIN_NEWS_RESPONSE.data.filter(
+    (n) => !n.isVisible,
+  ).length;
   const latestNews = MOCK_ADMIN_NEWS_RESPONSE.data.slice(0, 3);
 
   return (
@@ -51,23 +61,66 @@ export default function AdminOverviewPage() {
         </div>
       </div>
 
-      {/* 4 thẻ chỉ số chính */}
+      {/* 4 thẻ KPI đếm từ 0 */}
       <AdminOverviewStats stats={stats} />
 
-      {/* 2 biểu đồ SVG/CSS thuần */}
+      {/* 2 biểu đồ SVG vẽ dần 1 lần khi cuộn tới */}
       <AdminCharts growth={growth} distribution={distribution} />
 
-      {/* Hai bảng tóm tắt nhanh: tài liệu chờ duyệt & tin kéo về gần nhất */}
-      <div className="admin-two-col">
+      {/* Card Cần xử lý + Tin kéo về gần nhất */}
+      <div className="admin-two-col kma-stagger">
         <section className="admin-card">
           <div className="admin-card-head">
             <h3 className="admin-card-title">
-              <FolderKanban size={18} color="#8b1218" />
-              Tài liệu đang chờ duyệt ({pendingDocs.length})
+              <AlertCircle size={18} color="#8b1218" />
+              Cần xử lý
             </h3>
             <Link href="/admin/library" className="admin-btn admin-btn--sm">
-              Duyệt ngay
+              Duyệt tài liệu
               <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: 10,
+              marginBottom: 14,
+            }}
+          >
+            <Link
+              href="/admin/library"
+              style={{
+                padding: "12px 14px",
+                borderRadius: 10,
+                background: "#fdf0f0",
+                border: "1px solid rgba(139, 18, 24, 0.25)",
+              }}
+            >
+              <strong className="admin-num" style={{ fontSize: "1.2rem", color: "#8b1218", display: "block" }}>
+                {stats.pendingDocumentsCount}
+              </strong>
+              <span style={{ fontSize: "0.8rem", color: "#3a312b" }}>
+                Tài liệu chờ duyệt
+              </span>
+            </Link>
+
+            <Link
+              href="/admin/news"
+              style={{
+                padding: "12px 14px",
+                borderRadius: 10,
+                background: "#faf1df",
+                border: "1px solid rgba(125, 86, 22, 0.28)",
+              }}
+            >
+              <strong className="admin-num" style={{ fontSize: "1.2rem", color: "#7d5616", display: "block" }}>
+                {hiddenNewsCount}
+              </strong>
+              <span style={{ fontSize: "0.8rem", color: "#3a312b" }}>
+                Tin đang ẩn / chờ rà soát
+              </span>
             </Link>
           </div>
 
@@ -75,7 +128,10 @@ export default function AdminOverviewPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Tiêu đề tài liệu</th>
+                  <th>
+                    <FolderKanban size={13} style={{ display: "inline", marginRight: 5 }} />
+                    Tài liệu chờ duyệt mới nhất
+                  </th>
                   <th>Môn</th>
                   <th>Người gửi</th>
                 </tr>
@@ -115,9 +171,9 @@ export default function AdminOverviewPage() {
                 key={item.id}
                 style={{
                   padding: "10px 12px",
-                  borderRadius: 12,
+                  borderRadius: 10,
                   background: "#fbf6ec",
-                  border: "1px solid #e5d9c6",
+                  border: "1px solid #e7dccb",
                 }}
               >
                 <strong style={{ display: "block", fontSize: "0.86rem" }}>

@@ -3,14 +3,22 @@
 import { useState } from "react";
 import AdminLibraryManager from "@/components/admin/AdminLibraryManager";
 import {
+  DataSkeleton,
+  EmptyState,
+  ErrorState,
+} from "@/components/ui/DataStates";
+import { useDemoState } from "@/components/ui/useDemoState";
+import {
   MOCK_ADMIN_LIBRARY_RESPONSE,
   type AdminDocumentItem,
 } from "@/lib/mock/admin";
 
 /**
  * Trang Quản lý Thư viện tài liệu (/admin/library).
+ * Hỗ trợ trạng thái dữ liệu qua ?demo=loading|empty|error.
  */
 export default function AdminLibraryPage() {
+  const { demoMode, retryDemo } = useDemoState();
   const [documents, setDocuments] = useState<AdminDocumentItem[]>(
     MOCK_ADMIN_LIBRARY_RESPONSE.data,
   );
@@ -74,12 +82,29 @@ export default function AdminLibraryPage() {
         </div>
       )}
 
-      <AdminLibraryManager
-        documents={documents}
-        onApprove={handleApprove}
-        onDelete={handleDelete}
-        onUploadMock={handleUploadMock}
-      />
+      {demoMode === "loading" ? (
+        <DataSkeleton variant="table" count={5} />
+      ) : demoMode === "error" ? (
+        <ErrorState
+          title="Không thể tải kho tài liệu"
+          message="Không thể kết nối dịch vụ lưu trữ tài liệu. Vui lòng thử lại."
+          onRetry={retryDemo}
+        />
+      ) : demoMode === "empty" ? (
+        <EmptyState
+          title="Thư viện chưa có tài liệu nào"
+          description="Tải lên tài liệu chính thức mới hoặc khôi phục danh sách mẫu."
+          actionLabel="Tải lại tài liệu mẫu"
+          onAction={retryDemo}
+        />
+      ) : (
+        <AdminLibraryManager
+          documents={documents}
+          onApprove={handleApprove}
+          onDelete={handleDelete}
+          onUploadMock={handleUploadMock}
+        />
+      )}
     </div>
   );
 }
