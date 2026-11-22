@@ -5,14 +5,19 @@ import {
   Award,
   Bookmark,
   Calendar,
+  EyeOff,
   GraduationCap,
-  Inbox,
-  Loader2,
   Megaphone,
   Search,
 } from "lucide-react";
-import DashboardHero from "@/components/dashboard/DashboardHero";
+import DashboardPageHeader from "@/components/dashboard/DashboardPageHeader";
 import NewsCard from "@/components/dashboard/NewsCard";
+import {
+  DataSkeleton,
+  EmptyState,
+  ErrorState,
+} from "@/components/ui/DataStates";
+import { useDemoState } from "@/components/ui/useDemoState";
 import {
   MOCK_NEWS_RESPONSE,
   NEWS_CATEGORY_LABELS,
@@ -21,9 +26,11 @@ import {
 } from "@/lib/mock/dashboard";
 
 /**
- * Trang Tin tức trường (/dashboard/news) theo Ảnh 2:
- * Hero có ô tìm kiếm tích hợp -> hàng lọc loại tin & nút "Bài đã lưu" -> tin ghim nổi bật -> lưới 3 cột tin tức.
- * Có sẵn nút mô phỏng trạng thái đang tải và trạng thái rỗng.
+ * Trang Tin tức trường (/dashboard/news) theo đặc tả A2:
+ * - Page header gọn (Q1) + ô tìm kiếm
+ * - Chip lọc (Tất cả, Học vụ, Học bổng, Sự kiện, Thông báo chung)
+ * - Tin ghim lớn trên cùng + lưới 2 cột thẻ tin gọn + cột phải "Đã lưu" & "Chưa đọc"
+ * - Trạng thái dữ liệu chỉ bật qua ?demo=loading|empty|error (KHÔNG có nút công tắc demo trên UI).
  */
 
 type NewsFilterValue = "all" | NewsCategory;
@@ -41,12 +48,11 @@ const CATEGORY_TABS: {
 ];
 
 export default function DashboardNewsPage() {
+  const { demoMode, retryDemo } = useDemoState();
   const [posts, setPosts] = useState<NewsPost[]>(MOCK_NEWS_RESPONSE.data);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<NewsFilterValue>("all");
   const [onlySaved, setOnlySaved] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [simulateEmpty, setSimulateEmpty] = useState(false);
 
   function handleToggleRead(id: string) {
     setPosts((prev) =>
@@ -64,71 +70,73 @@ export default function DashboardNewsPage() {
     );
   }
 
-  function handleSimulateLoading() {
-    setIsLoading(true);
-    window.setTimeout(() => setIsLoading(false), 900);
-  }
-
-  const savedCount = posts.filter((p) => p.isSaved).length;
+  const savedPosts = posts.filter((p) => p.isSaved);
+  const unreadPosts = posts.filter((p) => !p.isRead);
   const keyword = query.trim().toLowerCase();
 
-  const visiblePosts = simulateEmpty
-    ? []
-    : posts
-        .filter((item) => {
-          if (category !== "all" && item.category !== category) return false;
-          if (onlySaved && !item.isSaved) return false;
-          if (!keyword) return true;
-          return (
-            item.title.toLowerCase().includes(keyword) ||
-            item.summary.toLowerCase().includes(keyword) ||
-            item.sourceName.toLowerCase().includes(keyword)
-          );
-        })
-        .sort((a, b) => {
-          if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
-          return (
-            new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-          );
-        });
+  const visiblePosts = posts
+    .filter((item) => {
+      if (category !== "all" && item.category !== category) return false;
+      if (onlySaved && !item.isSaved) return false;
+      if (!keyword) return true;
+      return (
+        item.title.toLowerCase().includes(keyword) ||
+        item.summary.toLowerCase().includes(keyword) ||
+        item.sourceName.toLowerCase().includes(keyword)
+      );
+    })
+    .sort((a, b) => {
+      if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
+      return (
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      );
+    });
 
   const pinnedPost = visiblePosts.find((p) => p.isPinned) ?? null;
   const regularPosts = pinnedPost
     ? visiblePosts.filter((p) => p.id !== pinnedPost.id)
     : visiblePosts;
 
+  function resetFilters() {
+    setQuery("");
+    setCategory("all");
+    setOnlySaved(false);
+    retryDemo();
+  }
+
   return (
     <>
-      <DashboardHero
-        eyebrow="Tin tức sinh viên"
-        titlePrefix="Tin tức"
+      <DashboardPageHeader
+        breadcrumbs={[
+          { label: "Tổng quan", href: "/dashboard" },
+          { label: "Tin tức" },
+        ]}
+        title="Tin tức"
         titleHighlight="KMA"
-        subtitle="Cập nhật nhanh chóng các thông tin học vụ, học bổng, sự kiện và thông báo quan trọng dành cho sinh viên KMA."
-      >
-        <div className="dash-hero-search">
-          <Search size={18} color="#63594f" />
-          <input
-            type="search"
-            placeholder="Tìm kiếm tin tức (ví dụ: học bổng, đăng ký học, sự kiện...)"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label="Tìm kiếm tin tức"
-          />
-          <button
-            type="button"
-            className="dash-btn dash-btn--primary dash-btn--sm"
-            onClick={() => setQuery((q) => q.trim())}
-          >
-            Tìm kiếm
-          </button>
-        </div>
-      </DashboardHero>
+        description="Thông báo học vụ, học bổng, sự kiện và tin mới nhất từ Học viện Kỹ thuật Mật mã."
+        actions={
+          <div className="dash-hero-search" style={{ minWidth: 280 }}>
+            <Search size={16} color="#5c5249" />
+            <input
+              type="search"
+              placeholder="Tìm tin tức, học bổng..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label="Tìm kiếm tin tức"
+            />
+          </div>
+        }
+      />
 
       <main className="dash-main">
         <div className="dash-stack">
-          {/* Hàng lọc danh mục + Bài đã lưu + nút mô phỏng trạng thái */}
+          {/* Hàng chip lọc theo loại tin */}
           <div className="dash-news-filter-row">
-            <div className="dash-chip-group" role="tablist" aria-label="Lọc theo loại tin">
+            <div
+              className="dash-chip-group"
+              role="tablist"
+              aria-label="Lọc theo loại tin"
+            >
               {CATEGORY_TABS.map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -149,95 +157,129 @@ export default function DashboardNewsPage() {
               })}
             </div>
 
-            <div className="dash-chip-group">
-              <button
-                type="button"
-                aria-pressed={onlySaved}
-                className={`dash-chip ${onlySaved ? "dash-chip--active" : ""}`}
-                onClick={() => setOnlySaved((v) => !v)}
-              >
-                <Bookmark size={14} />
-                Bài đã lưu: <strong>{savedCount}</strong>
-              </button>
-
-              <button
-                type="button"
-                className="dash-btn dash-btn--sm"
-                onClick={handleSimulateLoading}
-                disabled={isLoading}
-              >
-                <Loader2 size={14} className={isLoading ? "dash-spin" : undefined} />
-                Đang tải
-              </button>
-
-              <button
-                type="button"
-                aria-pressed={simulateEmpty}
-                className={`dash-btn dash-btn--sm ${
-                  simulateEmpty ? "dash-btn--danger" : ""
-                }`}
-                onClick={() => setSimulateEmpty((v) => !v)}
-              >
-                <Inbox size={14} />
-                {simulateEmpty ? "Tắt rỗng" : "Trạng thái rỗng"}
-              </button>
-            </div>
+            <button
+              type="button"
+              aria-pressed={onlySaved}
+              className={`dash-chip ${onlySaved ? "dash-chip--active" : ""}`}
+              onClick={() => setOnlySaved((v) => !v)}
+            >
+              <Bookmark size={14} />
+              Bài đã lưu: <strong>{savedPosts.length}</strong>
+            </button>
           </div>
 
-          {isLoading ? (
-            <div className="dash-skeleton-grid" aria-busy="true">
-              <div className="dash-skeleton-card" />
-              <div className="dash-skeleton-card" />
-              <div className="dash-skeleton-card" />
-            </div>
-          ) : visiblePosts.length === 0 ? (
-            <div className="dash-state-box">
-              <Inbox size={34} color="#8b1218" />
-              <strong style={{ color: "#1e1916" }}>
-                Không có tin tức nào phù hợp
-              </strong>
-              <p style={{ margin: 0 }}>
-                Thử đổi từ khóa tìm kiếm, chọn danh mục khác hoặc đặt lại bộ lọc.
-              </p>
-              <button
-                type="button"
-                className="dash-btn dash-btn--primary dash-btn--sm"
-                onClick={() => {
-                  setQuery("");
-                  setCategory("all");
-                  setOnlySaved(false);
-                  setSimulateEmpty(false);
-                }}
-              >
-                Đặt lại bộ lọc
-              </button>
-            </div>
+          {demoMode === "loading" ? (
+            <DataSkeleton variant="cards" count={4} />
+          ) : demoMode === "error" ? (
+            <ErrorState
+              title="Không thể tải tin tức KMA"
+              message="Hệ thống chưa kết nối được với nguồn tin Học viện. Vui lòng thử lại."
+              onRetry={retryDemo}
+            />
+          ) : demoMode === "empty" || visiblePosts.length === 0 ? (
+            <EmptyState
+              title="Chưa có tin tức phù hợp"
+              description="Thử thay đổi từ khóa tìm kiếm hoặc đặt lại bộ lọc danh mục để xem tất cả thông báo."
+              actionLabel="Đặt lại bộ lọc"
+              onAction={resetFilters}
+            />
           ) : (
-            <>
-              {/* Tin ghim nổi bật ở trên cùng */}
-              {pinnedPost && (
-                <NewsCard
-                  post={pinnedPost}
-                  featured
-                  onToggleRead={handleToggleRead}
-                  onToggleSaved={handleToggleSaved}
-                />
-              )}
+            <div className="dash-news-layout">
+              <div className="dash-stack" style={{ gap: 18 }}>
+                {pinnedPost && (
+                  <NewsCard
+                    post={pinnedPost}
+                    featured
+                    onToggleRead={handleToggleRead}
+                    onToggleSaved={handleToggleSaved}
+                  />
+                )}
 
-              {/* Lưới 3 cột các tin còn lại */}
-              {regularPosts.length > 0 && (
-                <div className="dash-news-grid">
-                  {regularPosts.map((post) => (
-                    <NewsCard
-                      key={post.id}
-                      post={post}
-                      onToggleRead={handleToggleRead}
-                      onToggleSaved={handleToggleSaved}
-                    />
-                  ))}
-                </div>
-              )}
-            </>
+                {regularPosts.length > 0 && (
+                  <div className="dash-news-grid-2 kma-stagger">
+                    {regularPosts.map((post) => (
+                      <NewsCard
+                        key={post.id}
+                        post={post}
+                        onToggleRead={handleToggleRead}
+                        onToggleSaved={handleToggleSaved}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Cột phải: Đã lưu + Chưa đọc theo đặc tả A2 */}
+              <aside className="dash-stack" style={{ gap: 16 }}>
+                <section className="dash-card">
+                  <div className="dash-card-head" style={{ marginBottom: 12 }}>
+                    <h2 className="dash-card-title" style={{ fontSize: "1.02rem" }}>
+                      <Bookmark size={17} color="#8b1218" />
+                      Đã lưu ({savedPosts.length})
+                    </h2>
+                  </div>
+
+                  {savedPosts.length === 0 ? (
+                    <p style={{ margin: 0, fontSize: "0.84rem", color: "#5c5249" }}>
+                      Chưa có bài viết nào được lưu.
+                    </p>
+                  ) : (
+                    <div className="dash-mini-news-list">
+                      {savedPosts.map((item) => (
+                        <a
+                          key={item.id}
+                          href={item.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="dash-mini-news-item"
+                        >
+                          <strong style={{ fontSize: "0.84rem" }}>
+                            {item.title}
+                          </strong>
+                          <span style={{ fontSize: "0.75rem", color: "#5c5249" }}>
+                            {item.sourceName}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </section>
+
+                <section className="dash-card">
+                  <div className="dash-card-head" style={{ marginBottom: 12 }}>
+                    <h2 className="dash-card-title" style={{ fontSize: "1.02rem" }}>
+                      <EyeOff size={17} color="#7d5616" />
+                      Chưa đọc ({unreadPosts.length})
+                    </h2>
+                  </div>
+
+                  {unreadPosts.length === 0 ? (
+                    <p style={{ margin: 0, fontSize: "0.84rem", color: "#156843" }}>
+                      Bạn đã đọc tất cả tin tức mới.
+                    </p>
+                  ) : (
+                    <div className="dash-mini-news-list">
+                      {unreadPosts.slice(0, 4).map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          className="dash-mini-news-item"
+                          style={{ textAlign: "left", cursor: "pointer" }}
+                          onClick={() => handleToggleRead(item.id)}
+                        >
+                          <strong style={{ fontSize: "0.84rem" }}>
+                            {item.title}
+                          </strong>
+                          <span style={{ fontSize: "0.75rem", color: "#8b1218" }}>
+                            Nhấn để đánh dấu đã đọc
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </aside>
+            </div>
           )}
         </div>
       </main>
