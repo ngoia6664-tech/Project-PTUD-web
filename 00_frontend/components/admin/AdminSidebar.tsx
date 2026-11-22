@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -16,9 +17,10 @@ import {
 } from "lucide-react";
 
 /**
- * Thanh sidebar trái của khu vực Quản trị (/admin).
- * Gồm đầy đủ 7 mục quản trị, huy hiệu ADMIN để phân biệt với trang sinh viên,
- * và nút chuyển nhanh về /dashboard để tiện demo.
+ * Thanh sidebar trái của khu vực Quản trị (/admin):
+ * - 7 mục điều hướng quản trị có aria-current="page".
+ * - Một pill trượt dọc theo mục active bằng transform (--dash-indicator-ms: 800ms).
+ * - Trên màn nhỏ thu gọn thành drawer (Q5).
  */
 
 interface AdminSidebarProps {
@@ -38,6 +40,44 @@ const ADMIN_NAV_ITEMS = [
 
 export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const [pillReady, setPillReady] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
+  const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  const isItemActive = useCallback(
+    (item: (typeof ADMIN_NAV_ITEMS)[number]) =>
+      item.exact ? pathname === item.href : pathname.startsWith(item.href),
+    [pathname],
+  );
+
+  // Đo vị trí dọc mục đang active để trượt 1 pill duy nhất bằng transform
+  const syncPill = useCallback(() => {
+    const listEl = listRef.current;
+    if (!listEl) return;
+    const activeIdx = ADMIN_NAV_ITEMS.findIndex((item) => isItemActive(item));
+    const activeEl = activeIdx >= 0 ? linkRefs.current[activeIdx] : null;
+    if (!activeEl) {
+      setPillReady(false);
+      return;
+    }
+    listEl.style.setProperty("--admin-pill-y", `${activeEl.offsetTop}px`);
+    listEl.style.setProperty("--admin-pill-h", `${activeEl.offsetHeight}px`);
+    setPillReady(true);
+  }, [isItemActive]);
+
+  useEffect(() => {
+    const frameId = requestAnimationFrame(syncPill);
+    const listEl = listRef.current;
+    if (!listEl || typeof ResizeObserver === "undefined") {
+      return () => cancelAnimationFrame(frameId);
+    }
+    const observer = new ResizeObserver(() => syncPill());
+    observer.observe(listEl);
+    return () => {
+      cancelAnimationFrame(frameId);
+      observer.disconnect();
+    };
+  }, [syncPill]);
 
   return (
     <aside
@@ -74,26 +114,38 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         </button>
       </div>
 
-      <nav className="admin-nav">
+      <nav className="admin-nav" aria-label="Danh mục quản trị">
         <span className="admin-nav-group">Quản trị hệ thống</span>
-        {ADMIN_NAV_ITEMS.map((item) => {
-          const Icon = item.icon;
-          const active = item.exact
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
+        <div ref={listRef} className="admin-nav-list">
+          <span
+            className={`admin-nav-pill ${
+              pillReady ? "admin-nav-pill--ready" : ""
+            }`}
+            aria-hidden="true"
+          />
+          {ADMIN_NAV_ITEMS.map((item, idx) => {
+            const Icon = item.icon;
+            const active = isItemActive(item);
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`admin-nav-link ${active ? "admin-nav-link--active" : ""}`}
-              onClick={onClose}
-            >
-              <Icon size={18} />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={item.href}
+                ref={(el) => {
+                  linkRefs.current[idx] = el;
+                }}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`admin-nav-link ${
+                  active ? "admin-nav-link--active" : ""
+                }`}
+                onClick={onClose}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
       </nav>
 
       <div className="admin-sidebar-footer">

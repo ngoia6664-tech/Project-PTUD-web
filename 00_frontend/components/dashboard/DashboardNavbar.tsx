@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,8 +10,10 @@ import {
   CalendarDays,
   ChevronDown,
   FolderKanban,
+  GraduationCap,
   Home,
   LayoutDashboard,
+  LogOut,
   Menu,
   Newspaper,
   ShieldCheck,
@@ -22,9 +24,11 @@ import {
 import type { User } from "@/lib/mock/dashboard";
 
 /**
- * Thanh điều hướng trên cùng (Top Navbar) giữ nguyên đầy đủ tên và danh sách nav cũ:
- * Tổng quan, Tin tức trường, Lịch học, Tính GPA, Chương trình học,
- * Thư viện tài liệu, Hồ sơ cá nhân và KMA Battle Royale.
+ * Thanh điều hướng trên cùng (Top Navbar) khu sinh viên theo đặc tả Q4:
+ * - 5 tab chính: Tổng quan, Tin tức, Lịch học, Học tập, Battle Royale.
+ *   (Tab Học tập vẫn sáng khi ở /dashboard/gpa, /dashboard/curriculum, /dashboard/library)
+ * - Một pill đỏ duy nhất trượt giữa các tab bằng transform (--dash-indicator-ms: 800ms).
+ * - Bên phải: chuông thông báo hiện số tin chưa đọc + menu avatar (Hồ sơ, Chuyển sang Admin (Demo), Về Home, Đăng xuất).
  */
 
 interface DashboardNavbarProps {
@@ -32,15 +36,29 @@ interface DashboardNavbarProps {
   unreadNewsCount: number;
 }
 
-const TOP_NAV_ITEMS = [
+interface NavTabItem {
+  href: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+  extraPrefixes?: string[];
+}
+
+const TOP_NAV_ITEMS: NavTabItem[] = [
   { href: "/dashboard", label: "Tổng quan", icon: LayoutDashboard, exact: true },
-  { href: "/dashboard/news", label: "Tin tức trường", icon: Newspaper, exact: false },
-  { href: "/dashboard/schedule", label: "Lịch học", icon: CalendarDays, exact: false },
-  { href: "/dashboard/gpa", label: "Tính GPA", icon: Calculator, exact: false },
-  { href: "/dashboard/curriculum", label: "Chương trình học", icon: BookOpen, exact: false },
-  { href: "/dashboard/library", label: "Thư viện tài liệu", icon: FolderKanban, exact: false },
-  { href: "/dashboard/profile", label: "Hồ sơ cá nhân", icon: UserCircle2, exact: false },
-  { href: "/battleground", label: "KMA Battle Royale", icon: Swords, exact: false },
+  { href: "/dashboard/news", label: "Tin tức", icon: Newspaper },
+  { href: "/dashboard/schedule", label: "Lịch học", icon: CalendarDays },
+  {
+    href: "/dashboard/study",
+    label: "Học tập",
+    icon: GraduationCap,
+    extraPrefixes: [
+      "/dashboard/gpa",
+      "/dashboard/curriculum",
+      "/dashboard/library",
+    ],
+  },
+  { href: "/battleground", label: "Battle Royale", icon: Swords },
 ];
 
 export default function DashboardNavbar({
@@ -50,7 +68,54 @@ export default function DashboardNavbar({
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [pillReady, setPillReady] = useState(false);
+
   const menuWrapRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  const isItemActive = useCallback(
+    (item: NavTabItem) => {
+      if (item.exact) return pathname === item.href;
+      if (pathname.startsWith(item.href)) return true;
+      if (item.extraPrefixes?.some((prefix) => pathname.startsWith(prefix))) {
+        return true;
+      }
+      return false;
+    },
+    [pathname],
+  );
+
+  // Đo vị trí tab đang active để cập nhật biến CSS cho 1 pill trượt duy nhất
+  const syncPill = useCallback(() => {
+    const navEl = navRef.current;
+    if (!navEl) return;
+    const activeIndex = TOP_NAV_ITEMS.findIndex((item) => isItemActive(item));
+    const activeEl = activeIndex >= 0 ? linkRefs.current[activeIndex] : null;
+    if (!activeEl) {
+      setPillReady(false);
+      return;
+    }
+    navEl.style.setProperty("--pill-x", `${activeEl.offsetLeft}px`);
+    navEl.style.setProperty("--pill-w", `${activeEl.offsetWidth}px`);
+    setPillReady(true);
+  }, [isItemActive]);
+
+  useEffect(() => {
+    const frameId = requestAnimationFrame(syncPill);
+    const navEl = navRef.current;
+    if (!navEl || typeof ResizeObserver === "undefined") {
+      return () => cancelAnimationFrame(frameId);
+    }
+    const observer = new ResizeObserver(() => syncPill());
+    observer.observe(navEl);
+    window.addEventListener("resize", syncPill, { passive: true });
+    return () => {
+      cancelAnimationFrame(frameId);
+      observer.disconnect();
+      window.removeEventListener("resize", syncPill);
+    };
+  }, [syncPill]);
 
   useEffect(() => {
     if (!menuOpen && !drawerOpen) return;
@@ -79,11 +144,6 @@ export default function DashboardNavbar({
       document.removeEventListener("mousedown", handlePointerDown);
     };
   }, [menuOpen, drawerOpen]);
-
-  function isItemActive(item: (typeof TOP_NAV_ITEMS)[number]) {
-    if (item.exact) return pathname === item.href;
-    return pathname.startsWith(item.href);
-  }
 
   return (
     <>
@@ -126,14 +186,27 @@ export default function DashboardNavbar({
             </Link>
           </div>
 
-          {/* Giữ nguyên toàn bộ 8 mục điều hướng cũ */}
-          <nav className="dash-topnav" aria-label="Điều hướng chính">
-            {TOP_NAV_ITEMS.map((item) => {
+          {/* 5 tab chính + 1 pill trượt bằng transform */}
+          <nav
+            ref={navRef}
+            className="dash-topnav"
+            aria-label="Điều hướng chính"
+          >
+            <span
+              className={`dash-nav-pill ${
+                pillReady ? "dash-nav-pill--ready" : ""
+              }`}
+              aria-hidden="true"
+            />
+            {TOP_NAV_ITEMS.map((item, idx) => {
               const Icon = item.icon;
               const active = isItemActive(item);
               return (
                 <Link
                   key={item.href}
+                  ref={(el) => {
+                    linkRefs.current[idx] = el;
+                  }}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={`dash-topnav-link ${
@@ -147,16 +220,20 @@ export default function DashboardNavbar({
             })}
           </nav>
 
-          {/* Cụm công cụ góc phải */}
+          {/* Cụm góc phải: Chuông hiện số chưa đọc + Avatar menu */}
           <div className="dash-topbar-end">
             <Link
               href="/dashboard/news"
               className="dash-icon-circle"
-              aria-label={`Tin tức trường (${unreadNewsCount} chưa đọc)`}
-              title="Tin tức & thông báo mới"
+              aria-label={`Tin tức (${unreadNewsCount} tin chưa đọc)`}
+              title={`Tin tức (${unreadNewsCount} tin chưa đọc)`}
             >
               <Bell size={17} />
-              {unreadNewsCount > 0 && <span className="dash-bell-dot" />}
+              {unreadNewsCount > 0 && (
+                <span className="dash-bell-count" aria-hidden="true">
+                  {unreadNewsCount}
+                </span>
+              )}
             </Link>
 
             <div className="dash-user-menu-wrap" ref={menuWrapRef}>
@@ -185,7 +262,7 @@ export default function DashboardNavbar({
                   <strong style={{ display: "block", fontSize: "0.9rem" }}>
                     {user.fullName}
                   </strong>
-                  <span style={{ fontSize: "0.76rem", color: "#63594f" }}>
+                  <span style={{ fontSize: "0.78rem", color: "#5c5249" }}>
                     {user.studentCode} • Lớp {user.className}
                   </span>
                 </div>
@@ -197,7 +274,7 @@ export default function DashboardNavbar({
                   onClick={() => setMenuOpen(false)}
                 >
                   <UserCircle2 size={16} />
-                  Hồ sơ cá nhân
+                  Hồ sơ
                 </Link>
                 <Link
                   href="/admin"
@@ -216,7 +293,16 @@ export default function DashboardNavbar({
                   onClick={() => setMenuOpen(false)}
                 >
                   <Home size={16} />
-                  Về trang Home
+                  Về Home
+                </Link>
+                <Link
+                  href="/login"
+                  className="dash-dropdown-item"
+                  role="menuitem"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <LogOut size={16} />
+                  Đăng xuất
                 </Link>
               </div>
             </div>
@@ -246,7 +332,7 @@ export default function DashboardNavbar({
             alignItems: "center",
             justifyContent: "space-between",
             paddingBottom: 12,
-            borderBottom: "1px solid #eadfce",
+            borderBottom: "1px solid #e7dccb",
           }}
         >
           <strong style={{ fontFamily: "var(--dash-display)", fontSize: "1.1rem" }}>
@@ -283,9 +369,63 @@ export default function DashboardNavbar({
 
         <div
           style={{
+            paddingTop: 8,
+            borderTop: "1px solid #e7dccb",
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+          }}
+        >
+          <span
+            style={{
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              color: "#5c5249",
+              padding: "4px 12px",
+              textTransform: "uppercase",
+            }}
+          >
+            Mục học tập
+          </span>
+          <Link
+            href="/dashboard/gpa"
+            className="dash-topnav-link"
+            onClick={() => setDrawerOpen(false)}
+          >
+            <Calculator size={16} />
+            <span>Tính GPA</span>
+          </Link>
+          <Link
+            href="/dashboard/curriculum"
+            className="dash-topnav-link"
+            onClick={() => setDrawerOpen(false)}
+          >
+            <BookOpen size={16} />
+            <span>Chương trình học</span>
+          </Link>
+          <Link
+            href="/dashboard/library"
+            className="dash-topnav-link"
+            onClick={() => setDrawerOpen(false)}
+          >
+            <FolderKanban size={16} />
+            <span>Thư viện tài liệu</span>
+          </Link>
+          <Link
+            href="/dashboard/profile"
+            className="dash-topnav-link"
+            onClick={() => setDrawerOpen(false)}
+          >
+            <UserCircle2 size={16} />
+            <span>Hồ sơ</span>
+          </Link>
+        </div>
+
+        <div
+          style={{
             marginTop: "auto",
             paddingTop: 12,
-            borderTop: "1px solid #eadfce",
+            borderTop: "1px solid #e7dccb",
             display: "flex",
             flexDirection: "column",
             gap: 8,
@@ -306,7 +446,15 @@ export default function DashboardNavbar({
             onClick={() => setDrawerOpen(false)}
           >
             <Home size={15} />
-            Về trang Home
+            Về Home
+          </Link>
+          <Link
+            href="/login"
+            className="dash-btn dash-btn--sm"
+            onClick={() => setDrawerOpen(false)}
+          >
+            <LogOut size={15} />
+            Đăng xuất
           </Link>
         </div>
       </aside>
