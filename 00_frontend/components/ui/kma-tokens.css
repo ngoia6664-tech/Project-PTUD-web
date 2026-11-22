@@ -1,0 +1,328 @@
+/* ==========================================================================
+   KMA OVERALL — TOKEN & TIỆN ÍCH DÙNG CHUNG (USER /dashboard & ADMIN /admin)
+   Chuẩn hóa màu sắc, bo góc 16px/10px, motion chỉ dùng transform/opacity/
+   stroke-dashoffset, không làm mờ nền.
+   ========================================================================== */
+
+:root {
+  /* Bảng màu đặc tả KMA Overall */
+  --kma-bg: #faf6ef;
+  --kma-bg-soft: #f4ede1;
+  --kma-surface: #fffdf9;
+  --kma-surface-warm: #fbf6ec;
+  --kma-crimson: #8b1218;
+  --kma-crimson-hi: #a61920;
+  --kma-crimson-deep: #6b0c11;
+  --kma-crimson-soft: #fdf0f0;
+  --kma-gold: #b8893a;
+  --kma-gold-ink: #7d5616;
+  --kma-gold-light: #f0d69b;
+  --kma-gold-soft: #faf1df;
+  --kma-jade: #156843;
+  --kma-jade-soft: #e7f6ee;
+  --kma-ink: #1e1916;
+  --kma-ink-2: #3a312b;
+  --kma-muted: #5c5249;
+  --kma-faint: #63594f;
+  --kma-line: #e7dccb;
+  --kma-line-strong: #8c7862;
+
+  /* Bo góc thống nhất theo lưới 8px */
+  --kma-radius-card: 16px;
+  --kma-radius-ctrl: 10px;
+  --kma-radius-pill: 999px;
+
+  /* Đổ bóng rất nhẹ */
+  --kma-shadow: 0 4px 16px rgba(72, 42, 18, 0.05);
+  --kma-shadow-hover: 0 8px 24px rgba(107, 12, 17, 0.09);
+
+  /* Motion đặc tả */
+  --kma-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dash-indicator-ms: 800ms;
+  --kma-route-ms: 250ms;
+  --kma-hover-ms: 200ms;
+}
+
+/* Chuyển trang chỉ mờ (opacity ~250ms, bỏ trượt 8px) */
+@keyframes kma-route-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Card hiện so le 40ms (tối đa 8 card đầu) */
+@keyframes kma-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Skeleton pulse chỉ dùng opacity (không dùng background-position) */
+@keyframes kma-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Biểu đồ cột mọc từ đáy */
+@keyframes kma-bar-grow {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* Điểm biểu đồ nảy nhẹ */
+@keyframes kma-dot-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hiện so le 40ms cho tối đa 8 card đầu */
+.kma-stagger > * {
+  opacity: 0;
+  animation: kma-card-in 260ms var(--kma-ease) forwards;
+}
+
+.kma-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.kma-stagger > *:nth-child(2) { animation-delay: 40ms; }
+.kma-stagger > *:nth-child(3) { animation-delay: 80ms; }
+.kma-stagger > *:nth-child(4) { animation-delay: 120ms; }
+.kma-stagger > *:nth-child(5) { animation-delay: 160ms; }
+.kma-stagger > *:nth-child(6) { animation-delay: 200ms; }
+.kma-stagger > *:nth-child(7) { animation-delay: 240ms; }
+.kma-stagger > *:nth-child(8) { animation-delay: 280ms; }
+.kma-stagger > *:nth-child(n + 9) { animation-delay: 280ms; }
+
+/* ---------------- Trạng thái dữ liệu dùng chung (Loading / Empty / Error) ---------------- */
+.kma-state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 40px 24px;
+  border-radius: var(--kma-radius-card);
+  background: var(--kma-surface);
+  border: 1px solid var(--kma-line);
+  box-shadow: var(--kma-shadow);
+}
+
+.kma-state-box--error {
+  border-color: rgba(139, 18, 24, 0.35);
+  background: var(--kma-crimson-soft);
+}
+
+.kma-state-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--kma-radius-card);
+  display: grid;
+  place-items: center;
+  background: var(--kma-gold-soft);
+  color: var(--kma-crimson);
+  border: 1px solid var(--kma-line);
+}
+
+.kma-state-box--error .kma-state-icon {
+  background: #ffffff;
+  color: var(--kma-crimson);
+  border-color: rgba(139, 18, 24, 0.35);
+}
+
+.kma-state-title {
+  margin: 0;
+  font-family: var(--font-kma-display), "Lora", Georgia, serif;
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.32;
+  color: var(--kma-ink);
+}
+
+.kma-state-desc {
+  margin: 0;
+  max-width: 440px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--kma-muted);
+}
+
+.kma-state-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: var(--kma-radius-pill);
+  border: 1px solid var(--kma-crimson);
+  background: var(--kma-crimson);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform var(--kma-hover-ms) var(--kma-ease),
+    background-color var(--kma-hover-ms) var(--kma-ease);
+}
+
+.kma-state-btn:hover {
+  background: var(--kma-crimson-deep);
+  transform: translateY(-1px);
+}
+
+/* Skeleton đúng hình card / bảng / lịch */
+.kma-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.kma-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kma-skeleton-card {
+  border-radius: var(--kma-radius-card);
+  background: var(--kma-surface);
+  border: 1px solid var(--kma-line);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kma-skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: #e9dfd0;
+  animation: kma-skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.kma-skeleton-line--title {
+  height: 18px;
+  width: 68%;
+}
+
+.kma-skeleton-line--short {
+  width: 42%;
+}
+
+.kma-skeleton-block {
+  height: 96px;
+  border-radius: var(--kma-radius-ctrl);
+  background: #efe6d8;
+  animation: kma-skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.kma-skeleton-row {
+  display: grid;
+  grid-template-columns: 110px 1.6fr 1fr 120px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--kma-line);
+}
+
+.kma-skeleton-row:last-child {
+  border-bottom: 0;
+}
+
+/* ---------------- Biểu đồ vẽ dần SVG (chỉ stroke-dashoffset, transform, opacity) ---------------- */
+.kma-svg-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 950ms var(--kma-ease);
+}
+
+.kma-svg-line--visible {
+  stroke-dashoffset: 0;
+}
+
+.kma-svg-area {
+  opacity: 0;
+  transition: opacity 550ms var(--kma-ease) 380ms;
+}
+
+.kma-svg-area--visible {
+  opacity: 1;
+}
+
+.kma-svg-dot {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.kma-svg-dot--visible {
+  animation: kma-dot-pop 320ms var(--kma-ease) forwards;
+}
+
+.kma-svg-bar {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+
+.kma-svg-bar--visible {
+  animation: kma-bar-grow 520ms var(--kma-ease) forwards;
+}
+
+.kma-svg-arc {
+  transition: stroke-dashoffset 820ms var(--kma-ease);
+}
+
+@media (max-width: 720px) {
+  .kma-skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kma-skeleton-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Tôn trọng prefers-reduced-motion toàn cục cho cả user và admin */
+@media (prefers-reduced-motion: reduce) {
+  .kma-stagger > *,
+  .kma-skeleton-line,
+  .kma-skeleton-block,
+  .kma-svg-dot--visible,
+  .kma-svg-bar--visible {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .kma-svg-line,
+  .kma-svg-area,
+  .kma-svg-arc {
+    transition: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+  }
+}

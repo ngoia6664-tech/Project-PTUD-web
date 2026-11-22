@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Playfair_Display } from "next/font/google";
+import { Be_Vietnam_Pro, Lora } from "next/font/google";
 import AdminShell from "@/components/admin/AdminShell";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-admin-body",
   display: "swap",
 });
 
-const playfairDisplay = Playfair_Display({
+const lora = Lora({
   subsets: ["latin", "vietnamese"],
-  weight: ["600", "700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-admin-display",
   display: "swap",
 });
@@ -35,7 +35,7 @@ export default function AdminLayout({
 }) {
   return (
     <AdminShell
-      fontClassName={`${beVietnamPro.variable} ${playfairDisplay.variable}`}
+      fontClassName={`${beVietnamPro.variable} ${lora.variable}`}
     >
       {children}
     </AdminShell>

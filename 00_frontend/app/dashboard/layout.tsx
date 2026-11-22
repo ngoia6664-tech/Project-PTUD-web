@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Playfair_Display } from "next/font/google";
+import { Be_Vietnam_Pro, Lora } from "next/font/google";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-dash-body",
   display: "swap",
 });
 
-const playfairDisplay = Playfair_Display({
+const lora = Lora({
   subsets: ["latin", "vietnamese"],
-  weight: ["600", "700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-dash-display",
   display: "swap",
 });
@@ -24,7 +24,8 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "KMA Overall — Cổng sinh viên",
-  description: "Dashboard học tập, lịch học, tính GPA và tin tức cho sinh viên Học viện KMA",
+  description:
+    "Dashboard học tập, lịch học, tính GPA và tin tức cho sinh viên Học viện KMA",
 };
 
 export default function DashboardLayout({
@@ -34,7 +35,7 @@ export default function DashboardLayout({
 }) {
   return (
     <DashboardShell
-      fontClassName={`${beVietnamPro.variable} ${playfairDisplay.variable}`}
+      fontClassName={`${beVietnamPro.variable} ${lora.variable}`}
     >
       {children}
     </DashboardShell>

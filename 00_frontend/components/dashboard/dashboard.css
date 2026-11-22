@@ -1,37 +1,42 @@
+@import "../ui/kma-tokens.css";
+
 /* ==========================================================================
    KMA OVERALL — STUDENT DASHBOARD (.dash-*)
-   Phong cách Giấy Dó & Sơn Mài Đỏ theo bộ mockup mới:
+   Phong cách Giấy Dó & Sơn Mài Đỏ theo đặc tả KMA-UI-1:
    Nền kem ấm (#faf6ef), đỏ son Học viện (#8b1218), vàng đồng (#b8893a),
-   thẻ trắng ngà nổi nhẹ, thanh điều hướng trên cùng + banner Học viện KMA.
+   thẻ trắng ngà bo 16px, tiêu đề Lora (<=700, line-height >=1.28),
+   nội dung Be Vietnam Pro, không làm mờ nền.
    Không đụng vào home.css hay trang Home.
    ========================================================================== */
 
 .dash-root {
-  --dash-bg: #faf6ef;
-  --dash-bg-soft: #f5eee2;
-  --dash-surface: #fffdf9;
-  --dash-surface-warm: #fbf7ef;
-  --dash-crimson: #8b1218;
-  --dash-crimson-hi: #a61920;
-  --dash-crimson-deep: #6b0c11;
-  --dash-crimson-soft: #fdf1f1;
-  --dash-gold: #b8893a;
-  --dash-gold-ink: #7d5616;
-  --dash-gold-light: #e5c98b;
-  --dash-gold-soft: #faf1df;
-  --dash-jade: #156843;
-  --dash-jade-soft: #e7f6ee;
-  --dash-ink: #1e1916;
-  --dash-ink-2: #3a312b;
-  --dash-muted: #6e6359;
-  --dash-faint: #63594f;
-  --dash-line: #eadfce;
-  --dash-line-strong: #8c7862;
-  --dash-shadow: 0 10px 30px rgba(84, 52, 24, 0.06);
-  --dash-shadow-hover: 0 16px 36px rgba(107, 12, 17, 0.11);
-  --dash-display: var(--font-dash-display), "Playfair Display", Georgia, serif;
-  --dash-body: var(--font-dash-body), "Be Vietnam Pro", system-ui, sans-serif;
-  --dash-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dash-bg: var(--kma-bg);
+  --dash-bg-soft: var(--kma-bg-soft);
+  --dash-surface: var(--kma-surface);
+  --dash-surface-warm: var(--kma-surface-warm);
+  --dash-crimson: var(--kma-crimson);
+  --dash-crimson-hi: var(--kma-crimson-hi);
+  --dash-crimson-deep: var(--kma-crimson-deep);
+  --dash-crimson-soft: var(--kma-crimson-soft);
+  --dash-gold: var(--kma-gold);
+  --dash-gold-ink: var(--kma-gold-ink);
+  --dash-gold-light: var(--kma-gold-light);
+  --dash-gold-soft: var(--kma-gold-soft);
+  --dash-jade: var(--kma-jade);
+  --dash-jade-soft: var(--kma-jade-soft);
+  --dash-ink: var(--kma-ink);
+  --dash-ink-2: var(--kma-ink-2);
+  --dash-muted: var(--kma-muted);
+  --dash-faint: var(--kma-faint);
+  --dash-line: var(--kma-line);
+  --dash-line-strong: var(--kma-line-strong);
+  --dash-shadow: var(--kma-shadow);
+  --dash-shadow-hover: var(--kma-shadow-hover);
+  --dash-display: var(--font-dash-display), var(--font-kma-display), "Lora", Georgia, serif;
+  --dash-body: var(--font-dash-body), var(--font-kma-body), "Be Vietnam Pro", system-ui, sans-serif;
+  --dash-ease: var(--kma-ease);
+  --dash-radius-card: var(--kma-radius-card);
+  --dash-radius-ctrl: var(--kma-radius-ctrl);
 
   position: relative;
   min-height: 100vh;
@@ -112,50 +117,40 @@
   }
 }
 
-@keyframes dash-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
+/* Chuyển trang chỉ mờ (opacity ~250ms, bỏ trượt 8px theo Q9) */
 .dash-route-stage {
-  animation: dash-route-enter 0.28s var(--dash-ease) both;
+  animation: kma-route-fade var(--kma-route-ms) ease both;
 }
 
 .dash-spin {
   animation: dash-spin 0.9s linear infinite;
 }
 
-/* ---------------- Thanh điều hướng trên cùng (Top Navbar) ---------------- */
+/* ---------------- Thanh điều hướng trên cùng (Top Navbar — 5 tab + 1 pill trượt) ---------------- */
 .dash-topbar {
   position: sticky;
   top: 0;
   z-index: 40;
   height: 68px;
-  background: rgba(255, 253, 249, 0.9);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: rgba(255, 253, 249, 0.97);
   border-bottom: 1px solid var(--dash-line);
 }
 
 .dash-topbar-inner {
-  max-width: 1420px;
+  max-width: 1320px;
   height: 100%;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 16px;
 }
 
 .dash-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex: none;
 }
 
@@ -168,19 +163,20 @@
 .dash-brand-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.24;
+  line-height: 1.28;
 }
 
 .dash-brand-name {
   font-family: var(--dash-display);
   font-size: 1.12rem;
-  font-weight: 800;
+  font-weight: 700;
+  line-height: 1.3;
   color: var(--dash-ink);
-  letter-spacing: -0.01em;
 }
 
 .dash-brand-name b {
   color: var(--dash-crimson);
+  font-weight: 700;
 }
 
 .dash-brand-sub {
@@ -189,97 +185,110 @@
 }
 
 .dash-topnav {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 1px;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--dash-bg-soft);
+  border: 1px solid var(--dash-line);
   min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
 }
 
-.dash-topnav::-webkit-scrollbar {
-  display: none;
+/* Một pill đỏ duy nhất trượt giữa 5 tab bằng transform (800ms) */
+.dash-nav-pill {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: calc(100% - 8px);
+  width: var(--pill-w, 0px);
+  border-radius: 999px;
+  background: var(--dash-crimson);
+  box-shadow: 0 4px 12px rgba(139, 18, 24, 0.2);
+  transform: translate3d(var(--pill-x, 0px), 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition:
+    transform var(--dash-indicator-ms, 800ms) cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+}
+
+.dash-nav-pill--ready {
+  opacity: 1;
 }
 
 .dash-topnav-link {
   position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 7px 7px;
+  gap: 7px;
+  padding: 8px 16px;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.89rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
   color: var(--dash-ink-2);
   white-space: nowrap;
   flex: none;
   transition:
-    background-color 0.22s var(--dash-ease),
-    color 0.22s var(--dash-ease),
-    box-shadow 0.22s var(--dash-ease),
-    transform 0.22s var(--dash-ease);
+    color 220ms var(--dash-ease),
+    background-color 200ms var(--dash-ease),
+    transform 200ms var(--dash-ease);
 }
 
 .dash-topnav-link svg {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   flex: none;
 }
 
-.dash-topnav-link::after {
-  content: "";
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 3px;
-  height: 2px;
-  border-radius: 2px;
-  background: currentColor;
-  opacity: 0;
-  transform: scaleX(0.4);
-  transition:
-    opacity 0.22s var(--dash-ease),
-    transform 0.24s var(--dash-ease);
-}
-
 .dash-topnav-link:hover {
-  background: var(--dash-bg-soft);
   color: var(--dash-crimson);
-}
-
-.dash-topnav-link:hover::after {
-  opacity: 0.45;
-  transform: scaleX(0.85);
+  background: rgba(139, 18, 24, 0.06);
 }
 
 .dash-topnav-link:active {
-  background: #ebd9c4;
-  color: var(--dash-crimson-deep);
   transform: scale(0.98);
 }
 
 .dash-topnav-link--active {
-  background: var(--dash-crimson);
   color: #ffffff;
-  box-shadow: 0 6px 16px rgba(139, 18, 24, 0.24);
 }
 
 .dash-topnav-link.dash-topnav-link--active:hover {
+  color: #ffffff;
+  background: transparent;
+}
+
+/* Trong ngăn kéo mobile (không dùng pill trượt ngang) giữ nền đỏ trực tiếp */
+.dash-drawer .dash-topnav-link--active {
+  background: var(--dash-crimson);
+  color: #ffffff;
+}
+
+.dash-drawer .dash-topnav-link--active:hover {
   background: var(--dash-crimson-deep);
   color: #ffffff;
 }
 
-.dash-topnav-link.dash-topnav-link--active:active {
-  background: #58090d;
+.dash-bell-count {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--dash-crimson);
   color: #ffffff;
-  transform: scale(0.98);
-}
-
-.dash-topnav-link--active::after,
-.dash-topnav-link.dash-topnav-link--active:hover::after {
-  opacity: 0.85;
-  transform: scaleX(0.75);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  font-variant-numeric: tabular-nums lining-nums;
+  border: 2px solid var(--dash-surface);
 }
 
 .dash-topbar-end {
@@ -507,19 +516,18 @@
   transform: scale(0.95);
 }
 
-/* Mobile Drawer */
+/* Mobile Drawer (nền mờ phẳng, không blur theo Q6) */
 .dash-drawer-backdrop {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: rgba(28, 20, 14, 0.42);
-  backdrop-filter: blur(4px);
+  background: rgba(28, 20, 14, 0.48);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 0.26s var(--dash-ease),
-    visibility 0.26s;
+    opacity 0.24s var(--dash-ease),
+    visibility 0.24s;
 }
 
 .dash-drawer-backdrop--open {
@@ -556,12 +564,13 @@
   transform: translateX(0);
 }
 
-/* ---------------- Banner Hero KMA Editorial (trên mọi trang) ---------------- */
+/* ---------------- Banner Hero (CHỈ dùng ở Tổng quan A1, cao <= 280px) ---------------- */
 .dash-hero {
   position: relative;
   border-bottom: 1px solid var(--dash-line);
   background: var(--dash-bg);
   overflow: hidden;
+  max-height: 280px;
 }
 
 .dash-hero-art {
@@ -594,14 +603,14 @@
   z-index: 2;
   max-width: 1320px;
   margin: 0 auto;
-  padding: 36px 24px 38px;
+  padding: 24px 24px 26px;
 }
 
 .dash-hero-copy {
   max-width: 620px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .dash-eyebrow {
@@ -617,7 +626,7 @@
 
 .dash-eyebrow::before {
   content: "";
-  width: 30px;
+  width: 28px;
   height: 2px;
   border-radius: 2px;
   background: var(--dash-gold);
@@ -625,10 +634,9 @@
 
 .dash-hero-title {
   font-family: var(--dash-display);
-  font-size: clamp(2rem, 4vw, 3.05rem);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.85rem, 3.2vw, 2.45rem);
+  font-weight: 700;
+  line-height: 1.3;
   color: var(--dash-ink);
   margin: 0;
 }
@@ -639,14 +647,105 @@
 
 .dash-hero-subtitle {
   margin: 0;
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 0.95rem;
+  line-height: 1.55;
   color: var(--dash-ink-2);
   max-width: 540px;
 }
 
 .dash-hero-extra {
+  margin-top: 6px;
+}
+
+/* ---------------- Page Header gọn cho các trang con (Q1: ~110–140px) ---------------- */
+.dash-page-header {
+  background: var(--dash-surface);
+  border-bottom: 1px solid var(--dash-line);
+}
+
+.dash-page-header-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dash-page-header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dash-breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--dash-muted);
+}
+
+.dash-breadcrumb a:hover {
+  color: var(--dash-crimson);
+  text-decoration: underline;
+}
+
+.dash-page-header-title {
+  font-family: var(--dash-display);
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--dash-ink);
+  margin: 0;
+}
+
+.dash-page-header-title span {
+  color: var(--dash-crimson);
+}
+
+.dash-page-header-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--dash-muted);
+}
+
+.dash-page-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+
+.dash-page-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   margin-top: 8px;
+}
+
+.dash-header-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--dash-bg-soft);
+  border: 1px solid var(--dash-line);
+  font-size: 0.8rem;
+  color: var(--dash-ink-2);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.dash-header-stat strong {
+  color: var(--dash-crimson);
 }
 
 /* ---------------- Khung nội dung chính ---------------- */
@@ -691,23 +790,21 @@
   background: var(--dash-crimson);
 }
 
-/* ---------------- Thẻ bề mặt (Card) ---------------- */
+/* ---------------- Thẻ bề mặt (Card — bo 16px, nâng 2px khi hover trong 200ms) ---------------- */
 .dash-card {
   background: var(--dash-surface);
   border: 1px solid var(--dash-line);
-  border-radius: 18px;
+  border-radius: var(--dash-radius-card);
   padding: 20px;
   box-shadow: var(--dash-shadow);
   transition:
-    transform 0.24s var(--dash-ease),
-    box-shadow 0.24s var(--dash-ease),
-    border-color 0.24s var(--dash-ease);
+    transform var(--kma-hover-ms) var(--dash-ease),
+    border-color var(--kma-hover-ms) var(--dash-ease);
 }
 
 .dash-card--hover:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: var(--dash-line-strong);
-  box-shadow: var(--dash-shadow-hover);
 }
 
 .dash-card-head {
@@ -1075,9 +1172,8 @@
   font-family: var(--dash-body);
   font-variant-numeric: tabular-nums lining-nums;
   font-size: 1.65rem;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 1.25;
   color: var(--dash-ink);
 }
 
@@ -1086,11 +1182,11 @@
   color: var(--dash-muted);
 }
 
-/* 5 thẻ Tiện ích nổi bật (Ảnh 1) */
-.dash-features-grid {
+/* 3 thẻ lối tắt trang Tổng quan (đặc tả A1) */
+.dash-shortcuts-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .dash-feature-card {
@@ -1098,28 +1194,77 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 18px 16px;
-  border-radius: 16px;
-  background:
-    linear-gradient(180deg, #fffdf9 0%, #fcf6ea 100%);
+  padding: 20px;
+  border-radius: var(--dash-radius-card);
+  background: var(--dash-surface);
   border: 1px solid var(--dash-line);
   box-shadow: var(--dash-shadow);
-  min-height: 148px;
+  min-height: 132px;
   overflow: hidden;
   transition:
-    transform 0.24s var(--dash-ease),
-    box-shadow 0.24s var(--dash-ease),
-    border-color 0.24s var(--dash-ease);
+    transform var(--kma-hover-ms) var(--dash-ease),
+    border-color var(--kma-hover-ms) var(--dash-ease);
 }
 
 .dash-feature-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(139, 18, 24, 0.55);
-  box-shadow: var(--dash-shadow-hover);
+  transform: translateY(-2px);
+  border-color: var(--dash-crimson);
 }
 
 .dash-feature-card:active {
-  transform: translateY(-1px) scale(0.99);
+  transform: translateY(0) scale(0.99);
+}
+
+/* Lưới tin tức 2 cột + cột phải Đã lưu / Chưa đọc (đặc tả A2) */
+.dash-news-layout {
+  display: grid;
+  grid-template-columns: 1fr 296px;
+  gap: 20px;
+  align-items: start;
+}
+
+.dash-news-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* 3 thẻ lớn trang Học tập (đặc tả A4) */
+.dash-study-top-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* Sticky result card trang Tính GPA (đặc tả A5) */
+.dash-gpa-sticky {
+  position: sticky;
+  top: 84px;
+}
+
+/* Thanh lọc dính trang Thư viện (đặc tả A7) */
+.dash-library-sticky-bar {
+  position: sticky;
+  top: 76px;
+  z-index: 20;
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Banner Tài liệu nổi bật mảnh <= 120px (đặc tả A7) */
+.dash-crimson-banner--compact {
+  padding: 16px 22px;
+  min-height: 0;
+  max-height: 120px;
+}
+
+.dash-crimson-banner--compact h3 {
+  font-size: 1.18rem;
+  line-height: 1.3;
+  margin-bottom: 2px;
 }
 
 .dash-feature-head {
@@ -1208,20 +1353,18 @@
   transform: translateX(1px) scale(0.995);
 }
 
-/* Banner đỏ sơn mài cuối trang Tổng quan & Thư viện (Ảnh 1 & Ảnh 4) */
+/* Banner đỏ sơn mài */
 .dash-crimson-banner {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 24px 28px;
-  border-radius: 18px;
+  padding: 20px 24px;
+  border-radius: var(--dash-radius-card);
   color: #fffaf0;
-  background:
-    radial-gradient(45% 140% at 95% 50%, rgba(229, 201, 139, 0.24), transparent 70%),
-    linear-gradient(120deg, #680b10 0%, #8b1218 52%, #a21a20 100%);
-  box-shadow: 0 14px 32px rgba(107, 12, 17, 0.26);
+  background: linear-gradient(120deg, #680b10 0%, #8b1218 52%, #a21a20 100%);
+  box-shadow: var(--dash-shadow-hover);
   overflow: hidden;
 }
 
@@ -1233,9 +1376,9 @@
 
 .dash-crimson-banner h3 {
   font-family: var(--dash-display);
-  font-size: 1.45rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.3;
   margin: 0 0 4px;
   color: #fffaf0;
 }
@@ -1303,7 +1446,7 @@
   gap: 20px;
   align-items: center;
   padding: 18px;
-  border-radius: 18px;
+  border-radius: var(--dash-radius-card);
   background:
     radial-gradient(35% 100% at 100% 0%, rgba(229, 201, 139, 0.24), transparent 70%),
     var(--dash-surface);
@@ -1441,7 +1584,7 @@
   text-align: center;
   gap: 10px;
   padding: 44px 20px;
-  border-radius: 18px;
+  border-radius: var(--dash-radius-card);
   background: var(--dash-surface);
   border: 1px dashed var(--dash-line-strong);
   color: var(--dash-muted);
@@ -1450,15 +1593,14 @@
 .dash-skeleton-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 16px;
 }
 
 .dash-skeleton-card {
   height: 196px;
-  border-radius: 18px;
-  background: linear-gradient(90deg, #f4ece0 25%, #fffaf2 50%, #f4ece0 75%);
-  background-size: 200% 100%;
-  animation: dash-shimmer 1.3s infinite linear;
+  border-radius: var(--dash-radius-card);
+  background: #f0e7d8;
+  animation: kma-skeleton-pulse 1.4s ease-in-out infinite;
   border: 1px solid var(--dash-line);
 }
 
@@ -1609,7 +1751,7 @@
 }
 
 .dash-slot-code {
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.79rem;
   display: flex;
   align-items: center;
@@ -1730,11 +1872,10 @@
 .dash-gpa-big {
   font-family: var(--dash-body);
   font-variant-numeric: tabular-nums lining-nums;
-  font-size: 2.2rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  font-size: 2.15rem;
+  font-weight: 700;
   color: var(--dash-crimson);
-  line-height: 1.18;
+  line-height: 1.2;
 }
 
 .dash-donut-wrap {
@@ -1763,8 +1904,7 @@
   font-family: var(--dash-body);
   font-variant-numeric: tabular-nums lining-nums;
   font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-weight: 700;
   color: var(--dash-crimson);
 }
 
@@ -1825,7 +1965,7 @@
 .dash-doc-cover {
   width: 96px;
   min-height: 122px;
-  border-radius: 12px;
+  border-radius: var(--dash-radius-ctrl);
   padding: 10px 8px;
   flex: none;
   display: flex;
@@ -1834,7 +1974,7 @@
   text-align: center;
   font-size: 0.75rem;
   line-height: 1.28;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.02em;
   border: 1px solid var(--dash-line);
 }
@@ -1952,39 +2092,7 @@
 }
 
 /* ---------------- Responsive ---------------- */
-@media (min-width: 1366px) {
-  .dash-topbar-inner {
-    padding: 0 20px;
-    gap: 12px;
-  }
-
-  .dash-topnav {
-    gap: 2px;
-  }
-
-  .dash-topnav-link {
-    gap: 5px;
-    padding: 7px 9px;
-    font-size: 0.79rem;
-  }
-
-  .dash-topnav-link::after {
-    left: 12px;
-    right: 12px;
-  }
-}
-
-@media (max-width: 1279px) {
-  .dash-topnav,
-  .dash-admin-pill {
-    display: none;
-  }
-
-  .dash-mobile-toggle {
-    display: inline-flex;
-  }
-}
-
+/* ---------------- Responsive (5 tab rộng rãi tới 960px, dưới 960px thành drawer) ---------------- */
 @media (max-width: 1140px) {
   .dash-hero-fade {
     background: linear-gradient(
@@ -1996,8 +2104,8 @@
     );
   }
 
-  .dash-features-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .dash-news-layout {
+    grid-template-columns: 1fr;
   }
 
   .dash-news-pinned {
@@ -2015,22 +2123,42 @@
 
   .dash-schedule-layout,
   .dash-study-grid,
+  .dash-study-top-grid,
   .dash-gpa-layout,
   .dash-profile-grid,
   .dash-overview-grid {
     grid-template-columns: 1fr;
   }
+
+  .dash-gpa-sticky {
+    position: static;
+  }
 }
 
 @media (max-width: 960px) {
+  .dash-topnav,
+  .dash-admin-pill {
+    display: none;
+  }
+
+  .dash-mobile-toggle {
+    display: inline-flex;
+  }
+
   .dash-stats-grid,
+  .dash-shortcuts-grid,
   .dash-news-grid,
+  .dash-news-grid-2,
   .dash-skeleton-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 720px) {
+  .dash-hero {
+    max-height: none;
+  }
+
   .dash-hero-fade {
     background: linear-gradient(
       90deg,
@@ -2042,14 +2170,16 @@
 
   .dash-topbar-inner,
   .dash-hero-inner,
+  .dash-page-header-inner,
   .dash-main {
     padding-left: 16px;
     padding-right: 16px;
   }
 
   .dash-stats-grid,
-  .dash-features-grid,
+  .dash-shortcuts-grid,
   .dash-news-grid,
+  .dash-news-grid-2,
   .dash-skeleton-grid,
   .dash-library-grid,
   .dash-form-grid,
@@ -2060,9 +2190,15 @@
     grid-template-columns: 1fr;
   }
 
-  .dash-crimson-banner {
+  .dash-crimson-banner,
+  .dash-crimson-banner--compact {
     flex-direction: column;
     align-items: flex-start;
+    max-height: none;
+  }
+
+  .dash-library-sticky-bar {
+    position: static;
   }
 
   /* Lịch tuần chuyển sang danh sách theo ngày trên màn nhỏ */
@@ -2094,6 +2230,10 @@
   .dash-toast,
   .dash-spin {
     animation: none !important;
+  }
+
+  .dash-nav-pill {
+    transition: none !important;
   }
 
   .dash-card--hover:hover,
