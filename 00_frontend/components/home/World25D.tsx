@@ -279,7 +279,8 @@ export default function World25D() {
                 )}
               </svg>
             </button>
-            <BtnSections name="Đăng nhập" variant="login" />
+            {/* Tạm thời dẫn sang /dashboard để xem trước giao diện mẫu */}
+            <BtnSections name="Đăng nhập" variant="login" href="/dashboard" />
           </div>
         </header>
 
