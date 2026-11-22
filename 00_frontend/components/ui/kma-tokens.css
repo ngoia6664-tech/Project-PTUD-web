@@ -37,8 +37,8 @@
   --kma-shadow-hover: 0 8px 24px rgba(107, 12, 17, 0.09);
 
   /* Motion đặc tả */
-  --kma-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --dash-indicator-ms: 800ms;
+  --kma-ease: cubic-bezier(0.4, 1, 0.36, 1);
+  --dash-indicator-ms: 600ms;
   --kma-route-ms: 250ms;
   --kma-hover-ms: 200ms;
 }

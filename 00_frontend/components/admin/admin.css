@@ -4,7 +4,7 @@
    KMA OVERALL — ADMIN DASHBOARD (.admin-*)
    Đồng bộ hệ màu Giấy Dó – Đỏ Son Học Viện – Vàng Đồng theo đặc tả KMA-UI-1:
    tiêu đề Lora (weight <= 700, line-height >= 1.28), nội dung Be Vietnam Pro,
-   card bo 16px, pill trượt dọc 800ms, không làm mờ nền,
+   card bo 16px, pill trượt dọc 600ms, không làm mờ nền,
    tôn trọng prefers-reduced-motion.
    ========================================================================== */
 
@@ -187,7 +187,7 @@
   gap: 4px;
 }
 
-/* Một pill trượt dọc theo mục active bằng transform (800ms) */
+/* Một pill trượt dọc theo mục active bằng transform (600ms / 0.6s) */
 .admin-nav-pill {
   position: absolute;
   left: 0;
@@ -203,7 +203,7 @@
   pointer-events: none;
   z-index: 0;
   transition:
-    transform var(--dash-indicator-ms, 800ms) cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--dash-indicator-ms, 600ms) cubic-bezier(0.22, 1, 0.36, 1),
     opacity 180ms ease;
 }
 

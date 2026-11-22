@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -19,7 +26,7 @@ import {
 /**
  * Thanh sidebar trái của khu vực Quản trị (/admin):
  * - 7 mục điều hướng quản trị có aria-current="page".
- * - Một pill trượt dọc theo mục active bằng transform (--dash-indicator-ms: 800ms).
+ * - Một pill trượt dọc theo mục active bằng transform (--dash-indicator-ms: 600ms).
  * - Trên màn nhỏ thu gọn thành drawer (Q5).
  */
 
@@ -38,46 +45,82 @@ const ADMIN_NAV_ITEMS = [
   { href: "/admin/grading", label: "Cấu hình thang điểm", icon: SlidersHorizontal, exact: false },
 ];
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
-  const [pillReady, setPillReady] = useState(false);
+  // Lưu mục vừa click để đổi active & trượt pill ngay lập tức, không chờ route tải xong
+  const [pendingNav, setPendingNav] = useState<{
+    href: string;
+    fromPathname: string;
+  } | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLSpanElement>(null);
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
+  const effectivePath =
+    pendingNav && pendingNav.fromPathname === pathname
+      ? pendingNav.href
+      : pathname;
+
   const isItemActive = useCallback(
-    (item: (typeof ADMIN_NAV_ITEMS)[number]) =>
-      item.exact ? pathname === item.href : pathname.startsWith(item.href),
-    [pathname],
+    (item: (typeof ADMIN_NAV_ITEMS)[number], targetPath = effectivePath) =>
+      item.exact ? targetPath === item.href : targetPath.startsWith(item.href),
+    [effectivePath],
   );
 
-  // Đo vị trí dọc mục đang active để trượt 1 pill duy nhất bằng transform
-  const syncPill = useCallback(() => {
+  // Cập nhật ngay vị trí dọc pill theo chỉ số mục (không đợi requestAnimationFrame)
+  const movePillToIndex = useCallback((index: number) => {
     const listEl = listRef.current;
-    if (!listEl) return;
-    const activeIdx = ADMIN_NAV_ITEMS.findIndex((item) => isItemActive(item));
-    const activeEl = activeIdx >= 0 ? linkRefs.current[activeIdx] : null;
+    const pillEl = pillRef.current;
+    if (!listEl || !pillEl) return;
+    const activeEl = index >= 0 ? linkRefs.current[index] : null;
     if (!activeEl) {
-      setPillReady(false);
+      pillEl.classList.remove("admin-nav-pill--ready");
       return;
     }
     listEl.style.setProperty("--admin-pill-y", `${activeEl.offsetTop}px`);
     listEl.style.setProperty("--admin-pill-h", `${activeEl.offsetHeight}px`);
-    setPillReady(true);
-  }, [isItemActive]);
+    pillEl.classList.add("admin-nav-pill--ready");
+  }, []);
 
-  useEffect(() => {
-    const frameId = requestAnimationFrame(syncPill);
+  // Đo vị trí dọc mục đang active để trượt 1 pill duy nhất bằng transform
+  const syncPill = useCallback(() => {
+    const activeIdx = ADMIN_NAV_ITEMS.findIndex((item) => isItemActive(item));
+    movePillToIndex(activeIdx);
+  }, [isItemActive, movePillToIndex]);
+
+  useIsomorphicLayoutEffect(() => {
+    syncPill();
     const listEl = listRef.current;
-    if (!listEl || typeof ResizeObserver === "undefined") {
-      return () => cancelAnimationFrame(frameId);
-    }
+    if (!listEl || typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(() => syncPill());
     observer.observe(listEl);
     return () => {
-      cancelAnimationFrame(frameId);
       observer.disconnect();
     };
   }, [syncPill]);
+
+  const handleNavClick = useCallback(
+    (
+      e: ReactMouseEvent<HTMLAnchorElement>,
+      item: (typeof ADMIN_NAV_ITEMS)[number],
+      idx: number,
+    ) => {
+      onClose();
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+        return;
+      }
+      movePillToIndex(idx);
+      setPendingNav(
+        isItemActive(item, pathname)
+          ? null
+          : { href: item.href, fromPathname: pathname },
+      );
+    },
+    [isItemActive, movePillToIndex, onClose, pathname],
+  );
 
   return (
     <aside
@@ -118,9 +161,8 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         <span className="admin-nav-group">Quản trị hệ thống</span>
         <div ref={listRef} className="admin-nav-list">
           <span
-            className={`admin-nav-pill ${
-              pillReady ? "admin-nav-pill--ready" : ""
-            }`}
+            ref={pillRef}
+            className="admin-nav-pill"
             aria-hidden="true"
           />
           {ADMIN_NAV_ITEMS.map((item, idx) => {
@@ -138,7 +180,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                 className={`admin-nav-link ${
                   active ? "admin-nav-link--active" : ""
                 }`}
-                onClick={onClose}
+                onClick={(e) => handleNavClick(e, item, idx)}
               >
                 <Icon size={18} />
                 <span>{item.label}</span>

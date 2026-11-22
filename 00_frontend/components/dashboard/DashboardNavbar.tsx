@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -27,7 +34,7 @@ import type { User } from "@/lib/mock/dashboard";
  * Thanh điều hướng trên cùng (Top Navbar) khu sinh viên theo đặc tả Q4:
  * - 5 tab chính: Tổng quan, Tin tức, Lịch học, Học tập, Battle Royale.
  *   (Tab Học tập vẫn sáng khi ở /dashboard/gpa, /dashboard/curriculum, /dashboard/library)
- * - Một pill đỏ duy nhất trượt giữa các tab bằng transform (--dash-indicator-ms: 800ms).
+ * - Một pill đỏ duy nhất trượt giữa các tab bằng transform (--dash-indicator-ms: 600ms).
  * - Bên phải: chuông thông báo hiện số tin chưa đọc + menu avatar (Hồ sơ, Chuyển sang Admin (Demo), Về Home, Đăng xuất).
  */
 
@@ -61,6 +68,9 @@ const TOP_NAV_ITEMS: NavTabItem[] = [
   { href: "/battleground", label: "Battle Royale", icon: Swords },
 ];
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function DashboardNavbar({
   user,
   unreadNewsCount,
@@ -68,54 +78,83 @@ export default function DashboardNavbar({
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [pillReady, setPillReady] = useState(false);
+  // Lưu tab vừa click để đổi active & trượt pill ngay lập tức, không chờ route tải xong
+  const [pendingNav, setPendingNav] = useState<{
+    href: string;
+    fromPathname: string;
+  } | null>(null);
 
   const menuWrapRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const pillRef = useRef<HTMLSpanElement>(null);
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
+  const effectivePath =
+    pendingNav && pendingNav.fromPathname === pathname
+      ? pendingNav.href
+      : pathname;
+
   const isItemActive = useCallback(
-    (item: NavTabItem) => {
-      if (item.exact) return pathname === item.href;
-      if (pathname.startsWith(item.href)) return true;
-      if (item.extraPrefixes?.some((prefix) => pathname.startsWith(prefix))) {
+    (item: NavTabItem, targetPath = effectivePath) => {
+      if (item.exact) return targetPath === item.href;
+      if (targetPath.startsWith(item.href)) return true;
+      if (item.extraPrefixes?.some((prefix) => targetPath.startsWith(prefix))) {
         return true;
       }
       return false;
     },
-    [pathname],
+    [effectivePath],
   );
 
-  // Đo vị trí tab đang active để cập nhật biến CSS cho 1 pill trượt duy nhất
-  const syncPill = useCallback(() => {
+  // Cập nhật ngay vị trí pill tới tab theo chỉ số (không đợi requestAnimationFrame)
+  const movePillToIndex = useCallback((index: number) => {
     const navEl = navRef.current;
-    if (!navEl) return;
-    const activeIndex = TOP_NAV_ITEMS.findIndex((item) => isItemActive(item));
-    const activeEl = activeIndex >= 0 ? linkRefs.current[activeIndex] : null;
+    const pillEl = pillRef.current;
+    if (!navEl || !pillEl) return;
+    const activeEl = index >= 0 ? linkRefs.current[index] : null;
     if (!activeEl) {
-      setPillReady(false);
+      pillEl.classList.remove("dash-nav-pill--ready");
       return;
     }
     navEl.style.setProperty("--pill-x", `${activeEl.offsetLeft}px`);
     navEl.style.setProperty("--pill-w", `${activeEl.offsetWidth}px`);
-    setPillReady(true);
-  }, [isItemActive]);
+    pillEl.classList.add("dash-nav-pill--ready");
+  }, []);
 
-  useEffect(() => {
-    const frameId = requestAnimationFrame(syncPill);
+  // Đo vị trí tab đang active để đồng bộ pill khi đổi route hoặc đổi kích thước
+  const syncPill = useCallback(() => {
+    const activeIndex = TOP_NAV_ITEMS.findIndex((item) => isItemActive(item));
+    movePillToIndex(activeIndex);
+  }, [isItemActive, movePillToIndex]);
+
+  useIsomorphicLayoutEffect(() => {
+    syncPill();
     const navEl = navRef.current;
-    if (!navEl || typeof ResizeObserver === "undefined") {
-      return () => cancelAnimationFrame(frameId);
-    }
+    if (!navEl || typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(() => syncPill());
     observer.observe(navEl);
     window.addEventListener("resize", syncPill, { passive: true });
     return () => {
-      cancelAnimationFrame(frameId);
       observer.disconnect();
       window.removeEventListener("resize", syncPill);
     };
   }, [syncPill]);
+
+  // Kích hoạt trượt pill ngay lập tức khi người dùng click tab (bỏ độ trễ chờ route)
+  const handleNavClick = useCallback(
+    (e: ReactMouseEvent<HTMLAnchorElement>, item: NavTabItem, idx: number) => {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+        return;
+      }
+      movePillToIndex(idx);
+      setPendingNav(
+        isItemActive(item, pathname)
+          ? null
+          : { href: item.href, fromPathname: pathname },
+      );
+    },
+    [isItemActive, movePillToIndex, pathname],
+  );
 
   useEffect(() => {
     if (!menuOpen && !drawerOpen) return;
@@ -193,9 +232,8 @@ export default function DashboardNavbar({
             aria-label="Điều hướng chính"
           >
             <span
-              className={`dash-nav-pill ${
-                pillReady ? "dash-nav-pill--ready" : ""
-              }`}
+              ref={pillRef}
+              className="dash-nav-pill"
               aria-hidden="true"
             />
             {TOP_NAV_ITEMS.map((item, idx) => {
@@ -208,6 +246,7 @@ export default function DashboardNavbar({
                     linkRefs.current[idx] = el;
                   }}
                   href={item.href}
+                  onClick={(e) => handleNavClick(e, item, idx)}
                   aria-current={active ? "page" : undefined}
                   className={`dash-topnav-link ${
                     active ? "dash-topnav-link--active" : ""
