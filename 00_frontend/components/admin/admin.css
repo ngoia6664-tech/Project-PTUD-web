@@ -372,6 +372,9 @@
   color: var(--admin-ink);
   margin: 0;
   line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .admin-header-sub {
@@ -867,8 +870,18 @@
     padding: 18px 16px 40px;
   }
 
-  .admin-header-sub {
+  .admin-header-sub,
+  .admin-header-role-pill,
+  .admin-user-meta {
     display: none;
+  }
+
+  .admin-user-chip {
+    padding: 4px;
+  }
+
+  .admin-header-title {
+    font-size: 1.05rem;
   }
 }
 

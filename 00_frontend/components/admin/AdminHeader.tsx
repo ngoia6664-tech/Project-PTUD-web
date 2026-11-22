@@ -71,14 +71,14 @@ export default function AdminHeader({
       </div>
 
       <div className="admin-header-right">
-        <span className="admin-badge admin-badge--crimson-soft">
+        <span className="admin-badge admin-badge--crimson-soft admin-header-role-pill">
           <ShieldCheck size={13} />
           {profile.roleLabel}
         </span>
 
         <div className="admin-user-chip">
           <span className="admin-avatar">{profile.avatarInitials}</span>
-          <div style={{ lineHeight: 1.2 }}>
+          <div className="admin-user-meta" style={{ lineHeight: 1.2 }}>
             <strong style={{ display: "block", fontSize: "0.83rem" }}>
               {profile.fullName}
             </strong>
