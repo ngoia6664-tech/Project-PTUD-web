@@ -1,8 +1,10 @@
-import Link from "next/link";
+"use client";
+
 import { ArrowRight, Calculator, FileText, Swords } from "lucide-react";
+import KmaTiltCard from "@/components/ui/KmaTiltCard";
 
 /**
- * 3 thẻ lối tắt trang Tổng quan đúng đặc tả A1:
+ * 3 thẻ lối tắt trang Tổng quan đúng đặc tả A1 với thẻ 3D tương tác (KmaTiltCard):
  * Tính GPA, Thư viện tài liệu và KMA Battle Royale.
  */
 
@@ -41,7 +43,7 @@ export default function OverviewShortcuts() {
         {SHORTCUTS.map((item) => {
           const Icon = item.icon;
           return (
-            <Link
+            <KmaTiltCard
               key={item.href}
               href={item.href}
               className="dash-feature-card"
@@ -64,9 +66,9 @@ export default function OverviewShortcuts() {
                 }}
               >
                 {item.cta}
-                <ArrowRight size={14} />
+                <ArrowRight size={14} className="dash-cta-arrow" />
               </span>
-            </Link>
+            </KmaTiltCard>
           );
         })}
       </div>

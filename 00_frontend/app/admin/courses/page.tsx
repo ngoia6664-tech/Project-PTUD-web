@@ -7,6 +7,7 @@ import {
   EmptyState,
   ErrorState,
 } from "@/components/ui/DataStates";
+import KmaSegmentedTabs from "@/components/ui/KmaSegmentedTabs";
 import { useDemoState } from "@/components/ui/useDemoState";
 import {
   MOCK_ADMIN_COURSES_RESPONSE,
@@ -64,20 +65,17 @@ export default function AdminCoursesPage() {
           </p>
         </div>
 
-        <div className="admin-chip-group" role="tablist" aria-label="Lọc theo ngành">
-          {(["all", "ATTT", "CNTT", "DTVT"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              role="tab"
-              aria-selected={majorFilter === m}
-              className={`admin-chip ${majorFilter === m ? "admin-chip--active" : ""}`}
-              onClick={() => setMajorFilter(m)}
-            >
-              {m === "all" ? "Tất cả ngành" : m}
-            </button>
-          ))}
-        </div>
+        <KmaSegmentedTabs
+          ariaLabel="Lọc theo ngành"
+          value={majorFilter}
+          onChange={setMajorFilter}
+          options={[
+            { value: "all", label: "Tất cả ngành" },
+            { value: "ATTT", label: "ATTT" },
+            { value: "CNTT", label: "CNTT" },
+            { value: "DTVT", label: "ĐTVT" },
+          ]}
+        />
       </div>
 
       {toast && (

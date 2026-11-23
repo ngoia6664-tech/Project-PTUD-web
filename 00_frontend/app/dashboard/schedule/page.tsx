@@ -22,6 +22,7 @@ import {
   EmptyState,
   ErrorState,
 } from "@/components/ui/DataStates";
+import KmaSegmentedTabs from "@/components/ui/KmaSegmentedTabs";
 import { useDemoState } from "@/components/ui/useDemoState";
 import {
   MOCK_SCHEDULE_RESPONSE,
@@ -179,25 +180,23 @@ export default function DashboardSchedulePage() {
                 <option value="hk2-2526">Học kỳ 2 (2025 – 2026)</option>
               </select>
 
-              <button
-                type="button"
-                aria-pressed={viewMode === "week"}
-                className={`dash-chip ${viewMode === "week" ? "dash-chip--active" : ""}`}
-                onClick={() => setViewMode("week")}
-              >
-                <CalendarDays size={15} />
-                Theo tuần
-              </button>
-
-              <button
-                type="button"
-                aria-pressed={viewMode === "day"}
-                className={`dash-chip ${viewMode === "day" ? "dash-chip--active" : ""}`}
-                onClick={() => setViewMode("day")}
-              >
-                <List size={15} />
-                Theo ngày
-              </button>
+              <KmaSegmentedTabs
+                ariaLabel="Chọn chế độ xem thời khóa biểu"
+                value={viewMode}
+                onChange={setViewMode}
+                options={[
+                  {
+                    value: "week",
+                    label: "Theo tuần",
+                    icon: <CalendarDays size={15} />,
+                  },
+                  {
+                    value: "day",
+                    label: "Theo ngày",
+                    icon: <List size={15} />,
+                  },
+                ]}
+              />
             </div>
 
             <div className="dash-chip-group">

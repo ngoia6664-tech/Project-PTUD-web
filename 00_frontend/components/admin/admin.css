@@ -43,17 +43,39 @@
   --admin-header-h: 68px;
 
   position: relative;
+  isolation: isolate;
   min-height: 100vh;
-  background:
-    radial-gradient(55% 40% at 95% 0%, rgba(229, 201, 139, 0.16), transparent 65%),
-    radial-gradient(50% 45% at 15% 100%, rgba(139, 18, 24, 0.06), transparent 65%),
-    var(--admin-bg);
+  background-color: var(--admin-bg);
+  background-image:
+    radial-gradient(rgba(125, 86, 22, 0.08) 1px, transparent 1px),
+    radial-gradient(55% 40% at 95% 0%, rgba(229, 201, 139, 0.2), transparent 65%),
+    radial-gradient(50% 45% at 15% 100%, rgba(139, 18, 24, 0.075), transparent 65%);
+  background-size: 24px 24px, 100% 100%, 100% 100%;
   color: var(--admin-ink);
   font-family: var(--admin-body);
   font-size: 14.5px;
   line-height: 1.58;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Quầng ánh sáng ambient ấm cho nền khu quản trị */
+.admin-root::before {
+  content: "";
+  position: fixed;
+  top: -120px;
+  right: -120px;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(229, 201, 139, 0.24) 0%,
+    rgba(229, 201, 139, 0.05) 48%,
+    transparent 72%
+  );
+  pointer-events: none;
+  z-index: -1;
 }
 
 .admin-root *,
@@ -114,7 +136,27 @@
   background: linear-gradient(180deg, var(--admin-sidebar-bg) 0%, var(--admin-sidebar-bg-2) 100%);
   border-right: 1px solid rgba(240, 214, 155, 0.16);
   box-shadow: 6px 0 28px rgba(38, 16, 19, 0.18);
+  overflow: hidden;
   transition: transform 0.3s var(--admin-ease);
+}
+
+/* Vân lưới mật mã & quầng sáng vàng đồng chìm góc dưới Sidebar Admin */
+.admin-sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(240, 214, 155, 0.12) 1px, transparent 1px),
+    radial-gradient(circle at 85% 92%, rgba(184, 137, 58, 0.16), transparent 52%);
+  background-size: 18px 18px, 100% 100%;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.admin-sidebar > * {
+  position: relative;
+  z-index: 1;
 }
 
 .admin-sidebar-top {
@@ -426,8 +468,9 @@
   gap: 20px;
 }
 
-/* ---------------- Thẻ, Nút, Badge, Input (bo 16px/10px, hover 2px 200ms) ---------------- */
+/* ---------------- Thẻ, Nút, Badge, Input (bo 16px/10px, đổ bóng ấm đa tầng + ánh kim) ---------------- */
 .admin-card {
+  position: relative;
   background: var(--admin-surface);
   border: 1px solid var(--admin-line);
   border-radius: var(--admin-radius-card);
@@ -435,12 +478,48 @@
   box-shadow: var(--admin-shadow);
   transition:
     transform var(--kma-hover-ms) var(--admin-ease),
-    border-color var(--kma-hover-ms) var(--admin-ease);
+    border-color var(--kma-hover-ms) var(--admin-ease),
+    box-shadow 240ms ease;
 }
 
-.admin-card--hover:hover {
+.admin-card--hover:not(.kma-tilt-card) {
+  overflow: hidden;
+}
+
+.admin-card--hover:not(.kma-tilt-card)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 2.5px;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--admin-gold) 25%,
+    var(--admin-crimson) 50%,
+    var(--admin-gold) 75%,
+    transparent
+  );
+  transform: scaleX(0);
+  transform-origin: center;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+}
+
+.admin-card--hover:not(.kma-tilt-card):hover {
   transform: translateY(-2px);
   border-color: var(--admin-line-strong);
+  box-shadow: var(--admin-shadow-hover);
+}
+
+.admin-card--hover:not(.kma-tilt-card):hover::after {
+  transform: scaleX(1);
+  opacity: 1;
 }
 
 .admin-card-head {
@@ -530,16 +609,43 @@
 }
 
 .admin-btn--primary {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(135deg, var(--admin-crimson-hi), var(--admin-crimson));
   color: #ffffff;
   border-color: var(--admin-crimson);
   box-shadow: 0 8px 18px rgba(139, 18, 24, 0.22);
 }
 
+/* Vệt sáng ánh kim nghiêng lướt qua nút CTA chính Admin khi hover */
+.admin-btn--primary::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: -45%;
+  width: 38%;
+  height: 140%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 248, 232, 0.32),
+    transparent
+  );
+  transform: translate3d(-120%, 0, 0) skewX(-24deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 560ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+}
+
 .admin-btn--primary:hover {
   background: linear-gradient(135deg, var(--admin-crimson), var(--admin-crimson-deep));
   color: #ffffff;
   border-color: var(--admin-crimson-deep);
+}
+
+.admin-btn--primary:hover::after {
+  transform: translate3d(420%, 0, 0) skewX(-24deg);
+  opacity: 1;
 }
 
 .admin-btn--jade {
@@ -691,6 +797,11 @@
   background: var(--admin-gold-soft);
   color: var(--admin-gold-ink);
   flex: none;
+  transition: transform 280ms var(--kma-spring);
+}
+
+.admin-stat-card:hover .admin-stat-icon {
+  transform: scale(1.09) rotate(-3deg);
 }
 
 .admin-stat-icon--crimson {
@@ -915,7 +1026,9 @@
   .admin-btn:hover,
   .admin-btn:active,
   .admin-nav-link:hover,
-  .admin-switch-btn:hover {
+  .admin-switch-btn:hover,
+  .admin-stat-card:hover .admin-stat-icon,
+  .admin-btn--primary:hover::after {
     transform: none !important;
   }
 }

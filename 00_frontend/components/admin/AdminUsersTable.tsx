@@ -1,6 +1,7 @@
 "use client";
 
 import { Lock, Search, Unlock } from "lucide-react";
+import KmaSegmentedTabs from "@/components/ui/KmaSegmentedTabs";
 import type { AdminUserAccount, UserRole } from "@/lib/mock/admin";
 
 /**
@@ -60,22 +61,12 @@ export default function AdminUsersTable({
           />
         </div>
 
-        <div className="admin-chip-group" role="tablist" aria-label="Lọc theo vai trò">
-          {ROLE_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              role="tab"
-              aria-selected={roleFilter === opt.value}
-              className={`admin-chip ${
-                roleFilter === opt.value ? "admin-chip--active" : ""
-              }`}
-              onClick={() => onRoleFilterChange(opt.value)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+        <KmaSegmentedTabs
+          ariaLabel="Lọc theo vai trò"
+          value={roleFilter}
+          onChange={onRoleFilterChange}
+          options={ROLE_OPTIONS}
+        />
       </div>
 
       {/* Bảng tài khoản */}

@@ -17,6 +17,7 @@ import {
   EmptyState,
   ErrorState,
 } from "@/components/ui/DataStates";
+import KmaTiltCard from "@/components/ui/KmaTiltCard";
 import { useDemoState } from "@/components/ui/useDemoState";
 import { MOCK_LIBRARY_RESPONSE, type DocumentItem } from "@/lib/mock/dashboard";
 
@@ -184,8 +185,12 @@ export default function DashboardLibraryPage() {
             </form>
           )}
 
-          {/* Banner "Tài liệu nổi bật" mảnh (<= 120px theo đặc tả A7) */}
-          <section className="dash-crimson-banner dash-crimson-banner--compact">
+          {/* Banner "Tài liệu nổi bật" mảnh với hiệu ứng nghiêng 3D tinh tế */}
+          <KmaTiltCard
+            as="section"
+            maxTilt={2.2}
+            className="dash-crimson-banner dash-crimson-banner--compact"
+          >
             <div>
               <span
                 style={{
@@ -210,9 +215,9 @@ export default function DashboardLibraryPage() {
               onClick={() => setSelectedCourse("AT1811")}
             >
               Xem ngay
-              <ArrowRight size={14} />
+              <ArrowRight size={14} className="dash-cta-arrow" />
             </button>
-          </section>
+          </KmaTiltCard>
 
           {/* Thanh lọc dính khi cuộn (đặc tả A7) */}
           <div className="dash-card dash-library-sticky-bar">

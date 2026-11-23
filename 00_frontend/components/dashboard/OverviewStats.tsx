@@ -1,18 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import { BookOpen, GraduationCap, Layers } from "lucide-react";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
+import KmaTiltCard from "@/components/ui/KmaTiltCard";
 import { useInViewOnce } from "@/components/ui/useInViewOnce";
 import type { DashboardOverview } from "@/lib/mock/dashboard";
 
 /**
- * 4 thẻ KPI trang Tổng quan (đặc tả A1):
+ * 4 thẻ KPI trang Tổng quan (đặc tả A1) nâng cấp thẻ 3D tương tác (KmaTiltCard):
  * - GPA 3.48 + sparkline vẽ dần bằng stroke-dashoffset
  * - Tín chỉ 107/150
  * - Tiến độ vòng tròn SVG 71% vẽ dần
  * - Môn đang học 5
- * Mỗi thẻ bấm được sang trang tương ứng và đếm số từ 0 đúng một lần khi xuất hiện.
  */
 
 interface OverviewStatsProps {
@@ -32,7 +31,7 @@ export default function OverviewStats({ overview }: OverviewStatsProps) {
       aria-label="Chỉ số học tập tổng quan"
     >
       {/* KPI 1: GPA + Sparkline */}
-      <Link
+      <KmaTiltCard
         href="/dashboard/gpa"
         className="dash-card dash-card--hover dash-stat-card"
         style={{ justifyContent: "space-between" }}
@@ -77,10 +76,10 @@ export default function OverviewStats({ overview }: OverviewStatsProps) {
             style={{ animationDelay: "520ms" }}
           />
         </svg>
-      </Link>
+      </KmaTiltCard>
 
       {/* KPI 2: Tín chỉ tích lũy */}
-      <Link
+      <KmaTiltCard
         href="/dashboard/curriculum"
         className="dash-card dash-card--hover dash-stat-card"
       >
@@ -90,16 +89,18 @@ export default function OverviewStats({ overview }: OverviewStatsProps) {
         <div>
           <div className="dash-stat-value">
             <AnimatedNumber value={overview.completedCredits} />
-            <span style={{ fontSize: "0.95rem", color: "#5c5249", fontWeight: 600 }}>
+            <span
+              style={{ fontSize: "0.95rem", color: "#5c5249", fontWeight: 600 }}
+            >
               /{overview.totalCredits}
             </span>
           </div>
           <div className="dash-stat-label">Tín chỉ tích lũy</div>
         </div>
-      </Link>
+      </KmaTiltCard>
 
       {/* KPI 3: Tiến độ vòng tròn 71% */}
-      <Link
+      <KmaTiltCard
         href="/dashboard/curriculum"
         className="dash-card dash-card--hover dash-stat-card"
       >
@@ -139,10 +140,10 @@ export default function OverviewStats({ overview }: OverviewStatsProps) {
           </div>
           <div className="dash-stat-label">Tiến độ chương trình</div>
         </div>
-      </Link>
+      </KmaTiltCard>
 
       {/* KPI 4: Môn đang học */}
-      <Link
+      <KmaTiltCard
         href="/dashboard/study"
         className="dash-card dash-card--hover dash-stat-card"
       >
@@ -155,7 +156,7 @@ export default function OverviewStats({ overview }: OverviewStatsProps) {
           </div>
           <div className="dash-stat-label">Môn đang học</div>
         </div>
-      </Link>
+      </KmaTiltCard>
     </section>
   );
 }

@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { NEWS_CATEGORY_LABELS, type NewsPost } from "@/lib/mock/dashboard";
+import KmaTiltCard from "@/components/ui/KmaTiltCard";
 
 /**
  * Thẻ tin tức cho trang /dashboard/news theo Ảnh 2:
@@ -47,7 +48,9 @@ export default function NewsCard({
 
   if (featured) {
     return (
-      <article
+      <KmaTiltCard
+        as="article"
+        maxTilt={2.4}
         className={`dash-news-pinned ${post.isRead ? "dash-news-card--read" : ""}`}
       >
         <Image
@@ -144,7 +147,7 @@ export default function NewsCard({
             <ExternalLink size={14} />
           </a>
         </div>
-      </article>
+      </KmaTiltCard>
     );
   }
 

@@ -17,6 +17,7 @@ import {
   EmptyState,
   ErrorState,
 } from "@/components/ui/DataStates";
+import KmaSegmentedTabs from "@/components/ui/KmaSegmentedTabs";
 import { useDemoState } from "@/components/ui/useDemoState";
 import {
   MOCK_NEWS_RESPONSE,
@@ -130,32 +131,21 @@ export default function DashboardNewsPage() {
 
       <main className="dash-main">
         <div className="dash-stack">
-          {/* Hàng chip lọc theo loại tin */}
+          {/* Hàng chip lọc theo loại tin với 1 pill đỏ trượt mượt */}
           <div className="dash-news-filter-row">
-            <div
-              className="dash-chip-group"
-              role="tablist"
-              aria-label="Lọc theo loại tin"
-            >
-              {CATEGORY_TABS.map((tab) => {
+            <KmaSegmentedTabs
+              ariaLabel="Lọc theo loại tin"
+              value={category}
+              onChange={setCategory}
+              options={CATEGORY_TABS.map((tab) => {
                 const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.value}
-                    type="button"
-                    role="tab"
-                    aria-selected={category === tab.value}
-                    className={`dash-chip ${
-                      category === tab.value ? "dash-chip--active" : ""
-                    }`}
-                    onClick={() => setCategory(tab.value)}
-                  >
-                    {Icon && <Icon size={15} />}
-                    {tab.label}
-                  </button>
-                );
+                return {
+                  value: tab.value,
+                  label: tab.label,
+                  icon: Icon ? <Icon size={15} /> : undefined,
+                };
               })}
-            </div>
+            />
 
             <button
               type="button"

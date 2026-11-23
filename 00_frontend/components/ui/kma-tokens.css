@@ -32,12 +32,20 @@
   --kma-radius-ctrl: 10px;
   --kma-radius-pill: 999px;
 
-  /* Đổ bóng rất nhẹ */
-  --kma-shadow: 0 4px 16px rgba(72, 42, 18, 0.05);
-  --kma-shadow-hover: 0 8px 24px rgba(107, 12, 17, 0.09);
+  /* Đổ bóng ấm đa tầng (tách thẻ nổi trên nền Giấy Dó) */
+  --kma-shadow:
+    0 1px 2px rgba(72, 42, 18, 0.04),
+    0 6px 18px rgba(72, 42, 18, 0.055);
+  --kma-shadow-hover:
+    0 4px 10px rgba(72, 42, 18, 0.06),
+    0 14px 30px rgba(107, 12, 17, 0.11);
+  --kma-shadow-3d:
+    0 8px 20px rgba(72, 42, 18, 0.08),
+    0 20px 42px rgba(107, 12, 17, 0.13);
 
   /* Motion đặc tả */
   --kma-ease: cubic-bezier(0.4, 1, 0.36, 1);
+  --kma-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --dash-indicator-ms: 600ms;
   --kma-route-ms: 120ms;
   --kma-hover-ms: 200ms;
@@ -297,22 +305,256 @@
   }
 }
 
+/* ---------------- Thẻ 3D tương tác (Interactive Tilt + Specular Sheen + Gold Accent) ---------------- */
+.kma-tilt-card {
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform: perspective(900px) rotateX(var(--tilt-rx, 0deg))
+    rotateY(var(--tilt-ry, 0deg)) translate3d(0, var(--tilt-ty, 0px), 0);
+  transition:
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    box-shadow 260ms ease;
+}
+
+/* Lớp ánh sáng phản chiếu chạy theo con trỏ chuột (chỉ đổi opacity) */
+.kma-tilt-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    300px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(240, 214, 155, 0.28),
+    rgba(255, 255, 255, 0.14) 38%,
+    transparent 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 260ms ease;
+}
+
+/* Vạch nhấn ánh kim Đỏ Son → Vàng Đồng trượt giãn từ tâm khi hover */
+.kma-tilt-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: 14px;
+  height: 2.5px;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--kma-gold) 22%,
+    var(--kma-crimson) 50%,
+    var(--kma-gold) 78%,
+    transparent 100%
+  );
+  transform: scaleX(0);
+  transform-origin: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms ease;
+}
+
+.kma-tilt-card:hover {
+  border-color: rgba(184, 137, 58, 0.65);
+  box-shadow: var(--kma-shadow-3d);
+}
+
+.kma-tilt-card:hover::before {
+  opacity: 1;
+}
+
+.kma-tilt-card:hover::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* ---------------- Góc đóng khung ấn chương KMA (::before & ::after) ---------------- */
+.kma-seal-frame {
+  position: relative;
+}
+
+.kma-seal-frame::before,
+.kma-seal-frame::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  opacity: 0.72;
+  transition: opacity 220ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kma-seal-frame::before {
+  top: 9px;
+  left: 9px;
+  border-top: 2px solid var(--kma-gold);
+  border-left: 2px solid var(--kma-gold);
+  border-top-left-radius: 5px;
+}
+
+.kma-seal-frame::after {
+  right: 9px;
+  bottom: 9px;
+  border-right: 2px solid var(--kma-gold);
+  border-bottom: 2px solid var(--kma-gold);
+  border-bottom-right-radius: 5px;
+}
+
+.kma-seal-frame:hover::before {
+  opacity: 1;
+  transform: translate3d(-2px, -2px, 0);
+}
+
+.kma-seal-frame:hover::after {
+  opacity: 1;
+  transform: translate3d(2px, 2px, 0);
+}
+
+/* ---------------- Chấm nhịp thở (chỉ dùng transform + opacity) ---------------- */
+@keyframes kma-pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.75;
+  }
+  70% {
+    transform: scale(2.15);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.15);
+    opacity: 0;
+  }
+}
+
+.kma-pulse-dot {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--kma-crimson);
+  flex: none;
+}
+
+.kma-pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--kma-crimson);
+  animation: kma-pulse-ring 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+/* ---------------- Bộ tab lọc nội bộ có 1 pill trượt bằng transform ---------------- */
+.kma-seg-tabs {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--kma-bg-soft);
+  border: 1px solid var(--kma-line);
+}
+
+.kma-seg-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--seg-w, 0px);
+  height: var(--seg-h, 34px);
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--kma-crimson-hi), var(--kma-crimson));
+  box-shadow: 0 4px 12px rgba(139, 18, 24, 0.22);
+  transform: translate3d(var(--seg-x, 0px), var(--seg-y, 0px), 0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms ease;
+}
+
+.kma-seg-pill--ready {
+  opacity: 1;
+}
+
+.kma-seg-btn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  color: var(--kma-ink-2);
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 200ms ease, transform 140ms ease;
+}
+
+.kma-seg-btn:hover {
+  color: var(--kma-crimson);
+}
+
+.kma-seg-btn:active {
+  transform: scale(0.97);
+}
+
+.kma-seg-btn--active,
+.kma-seg-btn--active:hover {
+  color: #ffffff;
+}
+
 /* Tôn trọng prefers-reduced-motion toàn cục cho cả user và admin */
 @media (prefers-reduced-motion: reduce) {
   .kma-stagger > *,
   .kma-skeleton-line,
   .kma-skeleton-block,
   .kma-svg-dot--visible,
-  .kma-svg-bar--visible {
+  .kma-svg-bar--visible,
+  .kma-pulse-dot::after {
     animation: none !important;
     opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .kma-pulse-dot::after {
+    opacity: 0 !important;
+  }
+
+  .kma-tilt-card,
+  .kma-tilt-card::before,
+  .kma-tilt-card::after,
+  .kma-seal-frame::before,
+  .kma-seal-frame::after,
+  .kma-seg-pill,
+  .kma-svg-line,
+  .kma-svg-area,
+  .kma-svg-arc {
+    transition: none !important;
     transform: none !important;
   }
 
   .kma-svg-line,
   .kma-svg-area,
   .kma-svg-arc {
-    transition: none !important;
     stroke-dashoffset: 0 !important;
     opacity: 1 !important;
   }

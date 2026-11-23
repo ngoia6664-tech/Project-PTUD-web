@@ -58,7 +58,7 @@ export default function GpaTargetCard({
   }
 
   return (
-    <aside className="dash-card dash-stack" style={{ gap: 16 }}>
+    <aside className="dash-card kma-seal-frame dash-stack" style={{ gap: 16 }}>
       <h2 className="dash-card-title">
         <Target size={19} color="#8b1218" />
         Kết quả & GPA mục tiêu
