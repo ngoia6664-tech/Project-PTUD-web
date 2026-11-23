@@ -1,0 +1,755 @@
+{
+  "capturedShots": 30,
+  "results": [
+    {
+      "page": "A1_dashboard",
+      "url": "/dashboard",
+      "viewport": "1440x900",
+      "file": "A1_dashboard_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": 238,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "50.96px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Tổng quan"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 4, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "A1_dashboard",
+      "url": "/dashboard",
+      "viewport": "375x812",
+      "file": "A1_dashboard_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": 313,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "38.48px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Tổng quan"
+      ],
+      "hasPill": true,
+      "pillTransform": "none",
+      "consoleErrors": []
+    },
+    {
+      "page": "A2_news",
+      "url": "/dashboard/news",
+      "viewport": "1440x900",
+      "file": "A2_news_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": 130,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "38.48px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Tin tức"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 137, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "A2_news",
+      "url": "/dashboard/news",
+      "viewport": "375x812",
+      "file": "A2_news_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": 194,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "30.16px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Tin tức"
+      ],
+      "hasPill": true,
+      "pillTransform": "none",
+      "consoleErrors": []
+    },
+    {
+      "page": "A3_schedule",
+      "url": "/dashboard/schedule",
+      "viewport": "1440x900",
+      "file": "A3_schedule_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": 130,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "38.48px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Lịch học"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 244, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "A3_schedule",
+      "url": "/dashboard/schedule",
+      "viewport": "375x812",
+      "file": "A3_schedule_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": 190,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "30.16px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Lịch học"
+      ],
+      "hasPill": true,
+      "pillTransform": "none",
+      "consoleErrors": []
+    },
+    {
+      "page": "A4_study",
+      "url": "/dashboard/study",
+      "viewport": "1440x900",
+      "file": "A4_study_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": 130,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "38.48px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Học tập"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 363, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "A4_study",
+      "url": "/dashboard/study",
+      "viewport": "375x812",
+      "file": "A4_study_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": 190,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "30.16px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Học tập"
+      ],
+      "hasPill": true,
+      "pillTransform": "none",
+      "consoleErrors": []
+    },
+    {
+      "page": "A5_gpa",
+      "url": "/dashboard/gpa",
+      "viewport": "1440x900",
+      "file": "A5_gpa_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": 130,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "38.48px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Học tập"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 363, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "A5_gpa",
+      "url": "/dashboard/gpa",
+      "viewport": "375x812",
+      "file": "A5_gpa_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": 190,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "30.16px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Học tập"
+      ],
+      "hasPill": true,
+      "pillTransform": "none",
+      "consoleErrors": []
+    },
+    {
+      "page": "A6_curriculum",
+      "url": "/dashboard/curriculum",
+      "viewport": "1440x900",
+      "file": "A6_curriculum_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": 130,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "38.48px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Học tập"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 363, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "A6_curriculum",
+      "url": "/dashboard/curriculum",
+      "viewport": "375x812",
+      "file": "A6_curriculum_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": 216,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "30.16px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Học tập"
+      ],
+      "hasPill": true,
+      "pillTransform": "none",
+      "consoleErrors": []
+    },
+    {
+      "page": "A7_library",
+      "url": "/dashboard/library",
+      "viewport": "1440x900",
+      "file": "A7_library_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": 172,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "38.48px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Học tập"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 363, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "A7_library",
+      "url": "/dashboard/library",
+      "viewport": "375x812",
+      "file": "A7_library_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": 273,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "30.16px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Học tập"
+      ],
+      "hasPill": true,
+      "pillTransform": "none",
+      "consoleErrors": []
+    },
+    {
+      "page": "A8_profile",
+      "url": "/dashboard/profile",
+      "viewport": "1440x900",
+      "file": "A8_profile_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": 130,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "38.48px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "A8_profile",
+      "url": "/dashboard/profile",
+      "viewport": "375x812",
+      "file": "A8_profile_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": 164,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "30.16px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [],
+      "hasPill": true,
+      "pillTransform": "none",
+      "consoleErrors": []
+    },
+    {
+      "page": "B1_admin",
+      "url": "/admin",
+      "viewport": "1440x900",
+      "file": "B1_admin_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Tổng quan"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B1_admin",
+      "url": "/admin",
+      "viewport": "375x812",
+      "file": "B1_admin_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Tổng quan"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B2_admin_news",
+      "url": "/admin/news",
+      "viewport": "1440x900",
+      "file": "B2_admin_news_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Tin tức & nguồn"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 48)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B2_admin_news",
+      "url": "/admin/news",
+      "viewport": "375x812",
+      "file": "B2_admin_news_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Tin tức & nguồn"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 48)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B3_admin_schedule",
+      "url": "/admin/schedule",
+      "viewport": "1440x900",
+      "file": "B3_admin_schedule_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Lịch học chung"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 97)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B3_admin_schedule",
+      "url": "/admin/schedule",
+      "viewport": "375x812",
+      "file": "B3_admin_schedule_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Lịch học chung"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 97)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B4_admin_users",
+      "url": "/admin/users",
+      "viewport": "1440x900",
+      "file": "B4_admin_users_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Người dùng"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 145)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B4_admin_users",
+      "url": "/admin/users",
+      "viewport": "375x812",
+      "file": "B4_admin_users_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Người dùng"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 145)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B5_admin_courses",
+      "url": "/admin/courses",
+      "viewport": "1440x900",
+      "file": "B5_admin_courses_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Môn học & CTĐT"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 194)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B5_admin_courses",
+      "url": "/admin/courses",
+      "viewport": "375x812",
+      "file": "B5_admin_courses_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Môn học & CTĐT"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 194)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B6_admin_library",
+      "url": "/admin/library",
+      "viewport": "1440x900",
+      "file": "B6_admin_library_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Thư viện tài liệu"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 242)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B6_admin_library",
+      "url": "/admin/library",
+      "viewport": "375x812",
+      "file": "B6_admin_library_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Thư viện tài liệu"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 242)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B7_admin_grading",
+      "url": "/admin/grading",
+      "viewport": "1440x900",
+      "file": "B7_admin_grading_1440.png",
+      "overflowX": false,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Cấu hình thang điểm"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 291)",
+      "consoleErrors": []
+    },
+    {
+      "page": "B7_admin_grading",
+      "url": "/admin/grading",
+      "viewport": "375x812",
+      "file": "B7_admin_grading_375.png",
+      "overflowX": false,
+      "scrollWidth": 375,
+      "innerWidth": 375,
+      "heroHeight": null,
+      "pageHeaderHeight": null,
+      "h1Font": "Lora, \"Lora Fallback\", Lora, \"Lora Fallback\", Lora, Georgia, serif",
+      "h1Weight": "700",
+      "h1LineHeight": "26px",
+      "bodyFont": "\"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", \"Be Vietnam Pro Fallback\", \"Be Vietnam Pro\", system-ui, sans-serif",
+      "activeNavs": [
+        "Cấu hình thang điểm"
+      ],
+      "hasPill": true,
+      "pillTransform": "matrix(1, 0, 0, 1, 0, 291)",
+      "consoleErrors": []
+    }
+  ],
+  "demoResults": [
+    {
+      "route": "/dashboard/news",
+      "mode": "loading",
+      "hasSkeleton": true,
+      "hasEmpty": false,
+      "hasError": false,
+      "hasRetryBtn": false
+    },
+    {
+      "route": "/dashboard/news",
+      "mode": "empty",
+      "hasSkeleton": false,
+      "hasEmpty": true,
+      "hasError": false,
+      "hasRetryBtn": false
+    },
+    {
+      "route": "/dashboard/news",
+      "mode": "error",
+      "hasSkeleton": false,
+      "hasEmpty": false,
+      "hasError": true,
+      "hasRetryBtn": true
+    },
+    {
+      "route": "/dashboard/schedule",
+      "mode": "loading",
+      "hasSkeleton": true,
+      "hasEmpty": false,
+      "hasError": false,
+      "hasRetryBtn": false
+    },
+    {
+      "route": "/dashboard/library",
+      "mode": "empty",
+      "hasSkeleton": false,
+      "hasEmpty": true,
+      "hasError": false,
+      "hasRetryBtn": false
+    },
+    {
+      "route": "/dashboard/curriculum",
+      "mode": "error",
+      "hasSkeleton": false,
+      "hasEmpty": false,
+      "hasError": true,
+      "hasRetryBtn": true
+    },
+    {
+      "route": "/admin/users",
+      "mode": "loading",
+      "hasSkeleton": true,
+      "hasEmpty": false,
+      "hasError": false,
+      "hasRetryBtn": false
+    },
+    {
+      "route": "/admin/users",
+      "mode": "empty",
+      "hasSkeleton": false,
+      "hasEmpty": true,
+      "hasError": false,
+      "hasRetryBtn": false
+    },
+    {
+      "route": "/admin/users",
+      "mode": "error",
+      "hasSkeleton": false,
+      "hasEmpty": false,
+      "hasError": true,
+      "hasRetryBtn": true
+    }
+  ],
+  "reducedResults": [
+    {
+      "route": "/dashboard",
+      "stageAnim": "none",
+      "pillTransition": "0s",
+      "firstStatText": "3.48"
+    },
+    {
+      "route": "/admin",
+      "stageAnim": "none",
+      "pillTransition": "0s",
+      "firstStatText": "4.826"
+    }
+  ],
+  "nav1280": {
+    "overflowX": false,
+    "tabCount": 5,
+    "tabs": [
+      {
+        "text": "Tổng quan",
+        "active": false,
+        "fontSize": "14.24px",
+        "width": 129
+      },
+      {
+        "text": "Tin tức",
+        "active": false,
+        "fontSize": "14.24px",
+        "width": 103
+      },
+      {
+        "text": "Lịch học",
+        "active": false,
+        "fontSize": "14.24px",
+        "width": 115
+      },
+      {
+        "text": "Học tập",
+        "active": true,
+        "fontSize": "14.24px",
+        "width": 111
+      },
+      {
+        "text": "Battle Royale",
+        "active": false,
+        "fontSize": "14.24px",
+        "width": 149
+      }
+    ]
+  }
+}

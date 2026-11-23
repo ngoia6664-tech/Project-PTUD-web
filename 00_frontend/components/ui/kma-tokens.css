@@ -39,11 +39,11 @@
   /* Motion đặc tả */
   --kma-ease: cubic-bezier(0.4, 1, 0.36, 1);
   --dash-indicator-ms: 600ms;
-  --kma-route-ms: 250ms;
+  --kma-route-ms: 120ms;
   --kma-hover-ms: 200ms;
 }
 
-/* Chuyển trang chỉ mờ (opacity ~250ms, bỏ trượt 8px) */
+/* Chuyển trang chỉ mờ nhanh (opacity 120ms, không trễ) */
 @keyframes kma-route-fade {
   from {
     opacity: 0;
@@ -100,21 +100,12 @@
   }
 }
 
-/* Hiện so le 40ms cho tối đa 8 card đầu */
+/* Đã bỏ độ trễ so le của card để hiện đồng thời cùng chuyển trang tức thì */
 .kma-stagger > * {
-  opacity: 0;
-  animation: kma-card-in 260ms var(--kma-ease) forwards;
+  opacity: 1;
+  animation: none;
+  animation-delay: 0ms;
 }
-
-.kma-stagger > *:nth-child(1) { animation-delay: 0ms; }
-.kma-stagger > *:nth-child(2) { animation-delay: 40ms; }
-.kma-stagger > *:nth-child(3) { animation-delay: 80ms; }
-.kma-stagger > *:nth-child(4) { animation-delay: 120ms; }
-.kma-stagger > *:nth-child(5) { animation-delay: 160ms; }
-.kma-stagger > *:nth-child(6) { animation-delay: 200ms; }
-.kma-stagger > *:nth-child(7) { animation-delay: 240ms; }
-.kma-stagger > *:nth-child(8) { animation-delay: 280ms; }
-.kma-stagger > *:nth-child(n + 9) { animation-delay: 280ms; }
 
 /* ---------------- Trạng thái dữ liệu dùng chung (Loading / Empty / Error) ---------------- */
 .kma-state-box {

@@ -88,7 +88,7 @@
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-/* Chuyển trang chỉ mờ (opacity ~250ms, bỏ trượt 8px theo Q9) */
+/* Chuyển trang chỉ mờ nhanh (opacity 120ms, bỏ trượt 8px) */
 .admin-route-stage {
   animation: kma-route-fade var(--kma-route-ms) ease both;
 }

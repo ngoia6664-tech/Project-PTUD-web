@@ -52,7 +52,12 @@ interface NavTabItem {
 }
 
 const TOP_NAV_ITEMS: NavTabItem[] = [
-  { href: "/dashboard", label: "Tổng quan", icon: LayoutDashboard, exact: true },
+  {
+    href: "/dashboard",
+    label: "Tổng quan",
+    icon: LayoutDashboard,
+    exact: true,
+  },
   { href: "/dashboard/news", label: "Tin tức", icon: Newspaper },
   { href: "/dashboard/schedule", label: "Lịch học", icon: CalendarDays },
   {
@@ -189,7 +194,14 @@ export default function DashboardNavbar({
       <header className="dash-topbar">
         <div className="dash-topbar-inner">
           {/* Logo KMA Overall */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flex: "none" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              flex: "none",
+            }}
+          >
             <button
               type="button"
               className="dash-mobile-toggle"
@@ -231,11 +243,7 @@ export default function DashboardNavbar({
             className="dash-topnav"
             aria-label="Điều hướng chính"
           >
-            <span
-              ref={pillRef}
-              className="dash-nav-pill"
-              aria-hidden="true"
-            />
+            <span ref={pillRef} className="dash-nav-pill" aria-hidden="true" />
             {TOP_NAV_ITEMS.map((item, idx) => {
               const Icon = item.icon;
               const active = isItemActive(item);
@@ -284,7 +292,9 @@ export default function DashboardNavbar({
                 aria-haspopup="menu"
                 aria-label="Mở menu tài khoản"
               >
-                <span className="dash-avatar-circle">{user.avatarInitials}</span>
+                <span className="dash-avatar-circle">
+                  {user.avatarInitials}
+                </span>
                 <ChevronDown
                   size={15}
                   className={`dash-chevron ${menuOpen ? "dash-chevron--open" : ""}`}
@@ -374,7 +384,9 @@ export default function DashboardNavbar({
             borderBottom: "1px solid #e7dccb",
           }}
         >
-          <strong style={{ fontFamily: "var(--dash-display)", fontSize: "1.1rem" }}>
+          <strong
+            style={{ fontFamily: "var(--dash-display)", fontSize: "1.1rem" }}
+          >
             KMA <span style={{ color: "#8b1218" }}>Overall</span>
           </strong>
           <button
