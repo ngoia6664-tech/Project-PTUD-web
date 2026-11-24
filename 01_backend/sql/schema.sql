@@ -38,3 +38,4 @@ INSERT INTO grades (user_id, course_code, course_name, credits, attempt, score10
 VALUES (1, 'CT305', 'Mạng máy tính', 3, 1, 9.0);
 DELETE FROM users WHERE id = 1;
 SELECT * FROM grades;
+DELETE FROM users WHERE email LIKE 'thu%@example.com' OR email LIKE 'khac%@example.com';
