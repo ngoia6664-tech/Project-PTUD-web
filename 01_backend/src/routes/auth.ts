@@ -2,6 +2,8 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { pool } from "../db/pool";
 import { Login } from "../controllers/authControllers";
+import { xacThuc } from "../controllers/VerifyControllers";
+import { Me } from "../controllers/authControllers";
 const router = Router();
 function Kiemtra(obj: Record<string, any>) {
   //Record <K,T> định nghĩa cho 1 obj , K là string , T là any (any thuộc tất cả kiểu dữ liệu)
@@ -84,4 +86,5 @@ router.post("/register", async (req, res) => {
   }
 });
 router.post("/login", Login);
+router.get("/me", xacThuc, Me);
 export default router;

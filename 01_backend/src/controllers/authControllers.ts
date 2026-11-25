@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { timUserTheoEmail } from "../queries/userQueries";
+import { log } from "console";
 export async function Login(req: Request, res: Response) {
   // Lấy email và password của client gửi qua body
   const { email, password } = req.body ?? {};
@@ -46,4 +47,16 @@ export async function Login(req: Request, res: Response) {
     console.error("Lỗi database", error);
     res.status(500).json({ loi: "Lỗi server" });
   }
+}
+export async function Me(req: Request, res: Response) {
+  // if (res.locals.length === 0) {
+  //   res
+  //     .status(401)
+  //     .json({ message: "Xác thực thất bại , token sai", ok: false });
+  // }
+  // if thừa vì nếu 401 thì đã dừng lại ở Xacthuc , vậy chỉ cần res.status(200) nếu hàm me chạy thì chứng tỏ các điều kiện chắc chắn đúng
+  // console.log("USERRRRRRR :" + res.locals.user);
+  res
+    .status(200)
+    .json({ message: "Xác thực thành công ", ok: true, user: res.locals.user });
 }
