@@ -1,7 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { pool } from "../db/pool";
-import { Login } from "../controllers/authControllers";
+import { Login, Register } from "../controllers/authControllers";
 import { xacThuc } from "../controllers/VerifyControllers";
 import { Me } from "../controllers/authControllers";
 const router = Router();
@@ -16,75 +16,7 @@ function Kiemtra(obj: Record<string, any>) {
   }
   return true;
 }
-router.post("/register", async (req, res) => {
-  //Bước 1 kiểm tra điều kiện
-  const {
-    student_code,
-    full_name,
-    email,
-    password,
-    major,
-    class_name,
-    admission_year,
-  } = req.body ?? {};
-  const auth_user_check = {
-    student_code,
-    full_name,
-    password,
-    email,
-    major,
-    class_name,
-  };
-  if (Kiemtra(auth_user_check) === false) {
-    res.status(400).json({
-      loi: "dữ liệu nhập vào không hợp lệ , không được để trống hoặc kiểu dữ liệu sai",
-    });
-    return;
-  }
-  if (!Number.isInteger(admission_year)) {
-    res.status(400).json({ loi: "Năm nhập bị sai dữ liệu" });
-    return;
-  }
-  if (password.length < 6) {
-    res.status(400).json({ loi: "Mật khẩu ít nhất 6 kí tự" });
-    return;
-  }
-  //Bước 2Băm mật khẩu
-  // bước 3 gửi Tạo sql
-  try {
-    const password_hash = await bcrypt.hash(password, 10);
-    const kq = await pool.query(
-      /*sql */ `
-            insert into users(student_code,full_name,email,password_hash,major,class_name,admission_year) values 
-            ($1,$2,$3,$4,$5,$6,$7) RETURNING id, student_code, email
-            `,
-      [
-        student_code,
-        full_name,
-        email,
-        password_hash,
-        major,
-        class_name,
-        admission_year,
-      ],
-    );
-    console.log(kq.rowCount);
-    res.status(201).json({ message: "Tạo user thành công", user: kq.rows[0] });
-  } catch (err: any) {
-    console.error("Lỗi DATABASE", err);
-    if (err.code === "23514") {
-      res.status(400).json({
-        loi: "Dữ liệu vượt phạm vi cho phép (năm nhập học, ngành, ...)",
-      });
-      return;
-    }
-    if (err.code === "23505") {
-      res.status(409).json({ loi: "Mã sinh viên hoặc email đã tồn tại" });
-      return;
-    }
-    res.status(500).json({ loi: "Lỗi Server" });
-  }
-});
+router.post("/register", Register);
 router.post("/login", Login);
 router.get("/me", xacThuc, Me);
 export default router;
