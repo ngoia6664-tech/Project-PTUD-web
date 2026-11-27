@@ -12,11 +12,11 @@
   --auth-crimson: #8b1218;
   --auth-crimson-hi: #a41820;
   --auth-crimson-deep: #6b0c11;
-  --auth-crimson-muted: #b9777b;
   --auth-crimson-soft: #fdf0f0;
   --auth-gold: #b8893a;
   --auth-gold-ink: #7d5616;
   --auth-jade: #156843;
+  --auth-amber: #9a5b08;
   --auth-ink: #221b18;
   --auth-ink-2: #463a34;
   --auth-muted: #6b5e55;
@@ -184,8 +184,8 @@
     ),
     radial-gradient(
       46% 36% at 16% 18%,
-      rgba(255, 251, 244, 0.72) 0%,
-      rgba(255, 251, 244, 0.25) 60%,
+      rgba(255, 251, 244, 0.78) 0%,
+      rgba(255, 251, 244, 0.3) 60%,
       transparent 100%
     );
   pointer-events: none;
@@ -198,19 +198,19 @@
   width: 100%;
   max-width: 1320px;
   margin: 0 auto;
-  padding: 32px 28px;
+  padding: 28px 28px;
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 480px);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 500px);
   align-items: center;
-  gap: 40px;
+  gap: 36px;
 }
 
 /* Cột trái: Tiêu đề cảm hứng */
 .kma-auth-hero {
   align-self: start;
-  padding-top: 28px;
-  padding-left: 32px;
-  max-width: 540px;
+  padding-top: 24px;
+  padding-left: 28px;
+  max-width: 520px;
 }
 
 .kma-auth-eyebrow {
@@ -243,11 +243,11 @@
 .kma-auth-hero-title {
   margin: 0;
   font-family: var(--auth-display);
-  font-size: clamp(2.15rem, 3.8vw, 3.15rem);
+  font-size: clamp(2.1rem, 3.6vw, 3.05rem);
   font-weight: 700;
   line-height: 1.28;
   color: var(--auth-ink);
-  text-shadow: 0 2px 14px rgba(255, 251, 244, 0.85);
+  text-shadow: 0 2px 14px rgba(255, 251, 244, 0.88);
 }
 
 .kma-auth-hero-title span {
@@ -259,6 +259,15 @@
   width: 230px;
   height: 24px;
   margin-top: 4px;
+}
+
+.kma-auth-hero-desc {
+  margin: 10px 0 0;
+  max-width: 410px;
+  font-size: 0.92rem;
+  line-height: 1.56;
+  color: var(--auth-ink-2);
+  text-shadow: 0 1px 10px rgba(255, 251, 244, 0.92);
 }
 
 /* Cột phải: Thẻ biểu mẫu trắng ngà */
@@ -280,31 +289,31 @@
 
 .kma-auth-card {
   width: 100%;
-  max-width: 472px;
+  max-width: 484px;
   background: var(--auth-surface);
   border: 1px solid var(--auth-line);
   border-radius: 22px;
-  padding: 36px 34px 32px;
+  padding: 34px 34px 30px;
   box-shadow:
     0 4px 14px rgba(72, 42, 18, 0.05),
     0 20px 48px rgba(72, 42, 18, 0.09);
-  animation: kma-auth-card-in 260ms var(--auth-ease) both;
+  animation: kma-auth-card-in 240ms var(--auth-ease) both;
 }
 
 .kma-auth-card--register {
-  padding: 28px 32px 26px;
+  padding: 26px 30px 24px;
 }
 
 /* Tiêu đề form Đăng nhập (căn giữa) */
 .kma-auth-card-head-center {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .kma-auth-card-title {
   margin: 0 0 6px;
   font-family: var(--auth-display);
-  font-size: clamp(1.65rem, 2.3vw, 2rem);
+  font-size: clamp(1.62rem, 2.2vw, 1.95rem);
   font-weight: 700;
   line-height: 1.28;
   color: var(--auth-ink);
@@ -316,7 +325,7 @@
 
 .kma-auth-card-sub {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.89rem;
   color: var(--auth-muted);
 }
 
@@ -325,12 +334,12 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .kma-auth-register-icon {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   border-radius: 14px;
   background: var(--auth-surface-warm);
   border: 1px solid var(--auth-line);
@@ -341,11 +350,11 @@
 }
 
 .kma-auth-card-head-row .kma-auth-card-title {
-  font-size: 1.62rem;
+  font-size: 1.56rem;
   margin-bottom: 2px;
 }
 
-/* Biểu mẫu & ô nhập */
+/* Biểu mẫu, label & ô nhập */
 .kma-auth-form {
   display: flex;
   flex-direction: column;
@@ -353,13 +362,26 @@
 }
 
 .kma-auth-form--compact {
-  gap: 12px;
+  gap: 11px;
+}
+
+.kma-auth-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
 }
 
 .kma-auth-field {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.kma-auth-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--auth-ink-2);
+  padding-left: 2px;
 }
 
 .kma-auth-input-wrap {
@@ -370,7 +392,7 @@
 
 .kma-auth-input-icon {
   position: absolute;
-  left: 14px;
+  left: 13px;
   color: var(--auth-muted);
   pointer-events: none;
   transition: color 180ms ease;
@@ -382,13 +404,13 @@
 
 .kma-auth-input {
   width: 100%;
-  height: 46px;
-  padding: 0 14px 0 42px;
+  height: 44px;
+  padding: 0 13px 0 40px;
   border-radius: 12px;
   border: 1px solid var(--auth-line-strong);
   background: #ffffff;
   color: var(--auth-ink);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   outline: none;
   transition:
     border-color 180ms var(--auth-ease),
@@ -397,15 +419,15 @@
 }
 
 .kma-auth-input--with-eye {
-  padding-right: 44px;
+  padding-right: 42px;
 }
 
 .kma-auth-input::placeholder {
-  color: #7c6f65;
+  color: #84776c;
   opacity: 1;
 }
 
-.kma-auth-input:hover {
+.kma-auth-input:hover:not(:disabled) {
   border-color: #a99276;
 }
 
@@ -414,11 +436,25 @@
   box-shadow: 0 0 0 3px rgba(139, 18, 24, 0.11);
 }
 
+.kma-auth-input--error {
+  border-color: var(--auth-crimson);
+  background: #fffafa;
+}
+
+.kma-auth-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(139, 18, 24, 0.16);
+}
+
+.kma-auth-input:disabled {
+  background: var(--auth-surface-warm);
+  opacity: 0.78;
+}
+
 .kma-auth-eye-btn {
   position: absolute;
-  right: 8px;
-  width: 34px;
-  height: 34px;
+  right: 7px;
+  width: 32px;
+  height: 32px;
   border: 0;
   border-radius: 9px;
   background: transparent;
@@ -429,7 +465,7 @@
   transition: background-color 150ms ease, color 150ms ease;
 }
 
-.kma-auth-eye-btn:hover {
+.kma-auth-eye-btn:hover:not(:disabled) {
   background: var(--auth-surface-warm);
   color: var(--auth-ink);
 }
@@ -437,14 +473,20 @@
 .kma-auth-hint {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.78rem;
+  gap: 5px;
+  font-size: 0.77rem;
   color: var(--auth-muted);
   padding-left: 2px;
+  line-height: 1.4;
 }
 
 .kma-auth-hint--ok {
   color: var(--auth-jade);
+  font-weight: 500;
+}
+
+.kma-auth-hint--warn {
+  color: var(--auth-amber);
   font-weight: 500;
 }
 
@@ -453,12 +495,66 @@
   font-weight: 500;
 }
 
-/* Hàng ghi nhớ / đồng ý điều khoản */
-.kma-auth-row-between {
+/* Thanh độ mạnh mật khẩu (Yếu / Trung bình / Mạnh) */
+.kma-auth-strength-wrap {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
+  padding: 2px 2px 0;
+}
+
+.kma-auth-strength-bars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  flex: 1;
+  max-width: 148px;
+}
+
+.kma-auth-strength-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--auth-line);
+  transition: background-color 200ms ease;
+}
+
+.kma-auth-strength-bar--lvl-1 {
+  background: var(--auth-crimson);
+}
+
+.kma-auth-strength-bar--lvl-2 {
+  background: #c88619;
+}
+
+.kma-auth-strength-bar--lvl-3 {
+  background: var(--auth-jade);
+}
+
+.kma-auth-strength-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.kma-auth-strength-text--lvl-1 {
+  color: var(--auth-crimson);
+}
+
+.kma-auth-strength-text--lvl-2 {
+  color: var(--auth-amber);
+}
+
+.kma-auth-strength-text--lvl-3 {
+  color: var(--auth-jade);
+}
+
+/* Hàng ghi nhớ / đồng ý điều khoản */
+.kma-auth-row-between {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
   margin-top: 2px;
 }
 
@@ -466,11 +562,15 @@
   display: inline-flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   color: var(--auth-ink-2);
   cursor: pointer;
   user-select: none;
   line-height: 1.45;
+}
+
+.kma-auth-terms-check {
+  margin-top: 2px;
 }
 
 .kma-auth-checkbox {
@@ -495,8 +595,34 @@
   transition: color 160ms ease;
 }
 
-.kma-auth-inline-link:hover {
+.kma-auth-inline-link:hover:not(:disabled) {
   color: var(--auth-crimson-deep);
+}
+
+.kma-auth-forgot-link {
+  font-size: 0.84rem;
+}
+
+/* Spinner cho nút đang gửi */
+@keyframes kma-auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.kma-auth-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.36);
+  border-top-color: #ffffff;
+  animation: kma-auth-spin 700ms linear infinite;
+  flex: none;
+}
+
+.kma-auth-spinner--crimson {
+  border-color: rgba(139, 18, 24, 0.22);
+  border-top-color: var(--auth-crimson);
 }
 
 /* Nút chính pill đỏ son */
@@ -514,8 +640,12 @@
     var(--auth-crimson) 100%
   );
   color: #ffffff;
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(139, 18, 24, 0.24);
   transition:
@@ -563,12 +693,11 @@
   transform: translateY(0) scale(0.985);
 }
 
-/* Trạng thái nút Đăng ký khi chưa đủ điều kiện / chưa đồng ý (giống Ảnh 2) */
 .kma-auth-submit:disabled {
-  background: var(--auth-crimson-muted);
-  border-color: var(--auth-crimson-muted);
-  box-shadow: none;
-  cursor: not-allowed;
+  background: var(--auth-crimson-deep);
+  border-color: var(--auth-crimson-deep);
+  opacity: 0.82;
+  cursor: wait;
 }
 
 /* Đường phân cách "hoặc" */
@@ -576,9 +705,9 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 4px 0;
+  margin: 2px 0;
   color: var(--auth-muted);
-  font-size: 0.84rem;
+  font-size: 0.83rem;
 }
 
 .kma-auth-divider::before,
@@ -592,12 +721,12 @@
 /* Nút tiếp tục với Google */
 .kma-auth-google {
   width: 100%;
-  height: 46px;
+  height: 45px;
   border-radius: 999px;
   border: 1px solid var(--auth-line-strong);
   background: #ffffff;
   color: var(--auth-ink);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -611,22 +740,27 @@
     box-shadow 180ms ease;
 }
 
-.kma-auth-google:hover {
+.kma-auth-google:hover:not(:disabled) {
   background: var(--auth-surface-warm);
   border-color: #a99276;
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(72, 42, 18, 0.08);
 }
 
-.kma-auth-google:active {
+.kma-auth-google:active:not(:disabled) {
   transform: translateY(0) scale(0.985);
+}
+
+.kma-auth-google:disabled {
+  opacity: 0.68;
+  cursor: not-allowed;
 }
 
 /* Dòng chuyển trang cuối thẻ */
 .kma-auth-switch {
-  margin: 6px 0 0;
+  margin: 4px 0 0;
   text-align: center;
-  font-size: 0.88rem;
+  font-size: 0.87rem;
   color: var(--auth-muted);
 }
 
@@ -1016,27 +1150,32 @@
 @media (max-width: 1020px) {
   .kma-auth-stage-inner {
     grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 28px 20px 36px;
+    gap: 16px;
+    padding: 20px 20px 30px;
   }
 
   .kma-auth-bg-fade {
     background: linear-gradient(
       180deg,
-      rgba(250, 246, 239, 0.56) 0%,
-      rgba(250, 246, 239, 0.88) 42%,
-      rgba(250, 246, 239, 0.96) 100%
+      rgba(250, 246, 239, 0.62) 0%,
+      rgba(250, 246, 239, 0.9) 34%,
+      rgba(250, 246, 239, 0.97) 100%
     );
   }
 
   .kma-auth-hero {
-    padding: 4px 0 0;
+    padding: 0;
     text-align: center;
     margin: 0 auto;
   }
 
-  .kma-auth-hero-arc {
-    margin: 4px auto 0;
+  .kma-auth-hero-title {
+    font-size: clamp(1.65rem, 5.2vw, 2.2rem);
+  }
+
+  .kma-auth-hero-arc,
+  .kma-auth-hero-desc {
+    display: none;
   }
 
   .kma-auth-card-col {
@@ -1051,9 +1190,13 @@
     padding-right: 16px;
   }
 
+  .kma-auth-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
   .kma-auth-card,
   .kma-auth-card--register {
-    padding: 24px 20px;
+    padding: 22px 18px;
     border-radius: 18px;
   }
 
