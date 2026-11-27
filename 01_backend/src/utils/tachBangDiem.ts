@@ -70,3 +70,42 @@ export function gopHocLai(dongs: Dong[]) {
   }
   return [...latestByCourse.values()];
 }
+export type DongCoTin = Dong & { tinChi: number };
+
+const DIEM_SO_4: Record<string, number> = {
+  "A+": 4,
+  A: 3.8,
+  "B+": 3.5,
+  B: 3,
+  "C+": 2.4,
+  C: 2,
+  "D+": 1.5,
+  D: 1,
+  F: 0,
+};
+
+// Giữ lại môn không phải điểm F
+export function boMonF(dongs: Dong[]): Dong[] {
+  return dongs.filter((d) => d.diemChu !== "F");
+}
+
+// GPA = tổng(điểm thang 4 × tín) / tổng tín
+export function tinhGPA(dongs: DongCoTin[]): number {
+  let tongDiem = 0;
+  let tongTin = 0;
+  for (const d of dongs) {
+    const diem4 = DIEM_SO_4[d.diemChu];
+    if (diem4 === undefined) {
+      throw new Error(`Điểm chữ không hợp lệ: ${d.diemChu}`);
+    }
+    tongDiem += diem4 * d.tinChi;
+    tongTin += d.tinChi;
+  }
+  if (tongTin === 0) return 0;
+  return Math.round((tongDiem / tongTin) * 100) / 100;
+}
+
+// Cả chuỗi: chữ dán vào → danh sách môn sẽ tính GPA
+export function xuLyBangDiem(text: string): Dong[] {
+  return boMonF(gopHocLai(locMonTinhGPA(tachDong(text))));
+}

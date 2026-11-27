@@ -95,8 +95,8 @@ export async function Register(req: Request, res: Response) {
     res.status(400).json({ message: "Dữ liệu nhập không hợp lệ", ok: false });
     return;
   }
-  if (password.length < 6) {
-    res.status(400).json({ loi: "Mật khẩu ít nhất 6 kí tự" });
+  if (password.length < 8) {
+    res.status(400).json({ loi: "Mật khẩu ít nhất 8 kí tự" });
     return;
   }
   try {

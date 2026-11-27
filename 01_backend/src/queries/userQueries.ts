@@ -1,5 +1,5 @@
 import { pool } from "../db/pool";
-type user = {
+type NewUser = {
   student_code: string;
   full_name: string;
   email: string;
@@ -15,7 +15,7 @@ export async function timUserTheoEmail(email: string) {
   );
   return kq.rows[0]; // không có user thì trả về undefined
 }
-export async function CreateUser(u: user) {
+export async function CreateUser(u: NewUser) {
   try {
     const kq = await pool.query(
       /*sql */ `
