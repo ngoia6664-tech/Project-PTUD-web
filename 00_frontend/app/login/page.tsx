@@ -1,70 +1,313 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { AreaChart, Mail, Lock } from "lucide-react";
-import "@/components/auth/auth.css";
+import { useRouter } from "next/navigation";
+import { AlertCircle, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import AuthShell, { useAuthModal } from "@/components/auth/AuthShell";
+import GoogleGlyph from "@/components/auth/GoogleGlyph";
+
+/**
+ * Trang Đăng nhập KMA Overall (/login):
+ * - Có nhãn <label> hiển thị rõ ràng, validation inline theo từng trường (aria-invalid/aria-describedby)
+ * - Cảnh báo Caps Lock ở ô mật khẩu, spinner khi đang xử lý, chống double-click nút Google & cleanup timer.
+ */
+
+interface LoginErrors {
+  identifier?: string;
+  password?: string;
+}
+
+function LoginCardForm() {
+  const router = useRouter();
+  const { openModal } = useAuthModal();
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [capsLockOn, setCapsLockOn] = useState(false);
+  const [remember, setRemember] = useState(false);
+  const [errors, setErrors] = useState<LoginErrors>({});
+  const [feedback, setFeedback] = useState<{
+    type: "error" | "success";
+    text: string;
+  } | null>(null);
+  const [submittingMode, setSubmittingMode] = useState<
+    null | "credentials" | "google"
+  >(null);
+
+  const identifierRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const timerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
+  const isBusy = submittingMode !== null;
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (isBusy) return;
+    setFeedback(null);
+
+    const nextErrors: LoginErrors = {};
+    if (!identifier.trim()) {
+      nextErrors.identifier = "Vui lòng nhập email hoặc mã sinh viên.";
+    }
+    if (!password) {
+      nextErrors.password = "Vui lòng nhập mật khẩu.";
+    }
+
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      if (nextErrors.identifier) {
+        identifierRef.current?.focus();
+      } else if (nextErrors.password) {
+        passwordRef.current?.focus();
+      }
+      return;
+    }
+
+    setErrors({});
+    setSubmittingMode("credentials");
+    setFeedback({
+      type: "success",
+      text: "Đăng nhập thành công! Đang chuyển tới Cổng sinh viên KMA...",
+    });
+
+    timerRef.current = window.setTimeout(() => {
+      router.push("/dashboard");
+    }, 450);
+  }
+
+  function handleGoogleClick() {
+    if (isBusy) return;
+    setErrors({});
+    setSubmittingMode("google");
+    setFeedback({
+      type: "success",
+      text: "Đang mô phỏng đăng nhập bằng tài khoản Google KMA...",
+    });
+    timerRef.current = window.setTimeout(() => {
+      router.push("/dashboard");
+    }, 550);
+  }
+
+  function handleCapsCheck(e: React.KeyboardEvent<HTMLInputElement>) {
+    setCapsLockOn(e.getModifierState("CapsLock"));
+  }
+
+  return (
+    <div className="kma-auth-card">
+      <div className="kma-auth-card-head-center">
+        <h2 className="kma-auth-card-title">
+          Chào mừng <span>trở lại</span>
+        </h2>
+        <p className="kma-auth-card-sub">
+          Đăng nhập để tiếp tục hành trình học tập.
+        </p>
+      </div>
+
+      <form className="kma-auth-form" onSubmit={handleSubmit} noValidate>
+        {feedback && (
+          <div
+            className={`kma-auth-alert ${
+              feedback.type === "error"
+                ? "kma-auth-alert--error"
+                : "kma-auth-alert--success"
+            }`}
+            role={feedback.type === "error" ? "alert" : "status"}
+          >
+            {feedback.text}
+          </div>
+        )}
+
+        <div className="kma-auth-field">
+          <label htmlFor="login-identifier" className="kma-auth-label">
+            Email hoặc mã sinh viên
+          </label>
+          <div className="kma-auth-input-wrap">
+            <Mail size={17} className="kma-auth-input-icon" aria-hidden="true" />
+            <input
+              ref={identifierRef}
+              id="login-identifier"
+              type="text"
+              className={`kma-auth-input ${
+                errors.identifier ? "kma-auth-input--error" : ""
+              }`}
+              placeholder="VD: at180324@actvn.edu.vn hoặc AT180324"
+              autoComplete="username"
+              value={identifier}
+              onChange={(e) => {
+                setIdentifier(e.target.value);
+                if (errors.identifier) {
+                  setErrors((prev) => ({ ...prev, identifier: undefined }));
+                }
+              }}
+              aria-invalid={errors.identifier ? true : undefined}
+              aria-describedby={
+                errors.identifier ? "login-identifier-err" : undefined
+              }
+              disabled={isBusy}
+            />
+          </div>
+          {errors.identifier && (
+            <span
+              id="login-identifier-err"
+              className="kma-auth-hint kma-auth-hint--err"
+              role="alert"
+            >
+              <AlertCircle size={13} aria-hidden="true" />
+              {errors.identifier}
+            </span>
+          )}
+        </div>
+
+        <div className="kma-auth-field">
+          <label htmlFor="login-password" className="kma-auth-label">
+            Mật khẩu
+          </label>
+          <div className="kma-auth-input-wrap">
+            <Lock size={17} className="kma-auth-input-icon" aria-hidden="true" />
+            <input
+              ref={passwordRef}
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              className={`kma-auth-input kma-auth-input--with-eye ${
+                errors.password ? "kma-auth-input--error" : ""
+              }`}
+              placeholder="Nhập mật khẩu của bạn"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errors.password) {
+                  setErrors((prev) => ({ ...prev, password: undefined }));
+                }
+              }}
+              onKeyUp={handleCapsCheck}
+              onKeyDown={handleCapsCheck}
+              aria-invalid={errors.password ? true : undefined}
+              aria-describedby={
+                errors.password ? "login-password-err" : undefined
+              }
+              disabled={isBusy}
+            />
+            <button
+              type="button"
+              className="kma-auth-eye-btn"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+              disabled={isBusy}
+            >
+              {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+            </button>
+          </div>
+          {errors.password && (
+            <span
+              id="login-password-err"
+              className="kma-auth-hint kma-auth-hint--err"
+              role="alert"
+            >
+              <AlertCircle size={13} aria-hidden="true" />
+              {errors.password}
+            </span>
+          )}
+          {capsLockOn && !errors.password && (
+            <span className="kma-auth-hint kma-auth-hint--warn" role="status">
+              <AlertCircle size={13} aria-hidden="true" />
+              Phím Caps Lock đang bật.
+            </span>
+          )}
+        </div>
+
+        <div className="kma-auth-row-between">
+          <label className="kma-auth-checkbox-label">
+            <input
+              type="checkbox"
+              className="kma-auth-checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+              disabled={isBusy}
+            />
+            <span>Ghi nhớ đăng nhập</span>
+          </label>
+
+          <button
+            type="button"
+            className="kma-auth-inline-link kma-auth-forgot-link"
+            onClick={() => openModal("forgot")}
+            disabled={isBusy}
+          >
+            Quên mật khẩu?
+          </button>
+        </div>
+
+        <button
+          type="submit"
+          className="kma-auth-submit"
+          disabled={isBusy}
+          aria-busy={submittingMode === "credentials"}
+        >
+          {submittingMode === "credentials" && (
+            <span className="kma-auth-spinner" aria-hidden="true" />
+          )}
+          <span>
+            {submittingMode === "credentials"
+              ? "Đang đăng nhập..."
+              : "Đăng nhập"}
+          </span>
+        </button>
+
+        <div className="kma-auth-divider">
+          <span>hoặc</span>
+        </div>
+
+        <button
+          type="button"
+          className="kma-auth-google"
+          onClick={handleGoogleClick}
+          disabled={isBusy}
+          aria-busy={submittingMode === "google"}
+        >
+          {submittingMode === "google" ? (
+            <span
+              className="kma-auth-spinner kma-auth-spinner--crimson"
+              aria-hidden="true"
+            />
+          ) : (
+            <GoogleGlyph />
+          )}
+          <span>
+            {submittingMode === "google"
+              ? "Đang kết nối Google..."
+              : "Tiếp tục với Google"}
+          </span>
+        </button>
+
+        <p className="kma-auth-switch">
+          Chưa có tài khoản? <Link href="/register">Đăng ký ngay</Link>
+        </p>
+      </form>
+    </div>
+  );
+}
 
 export default function LoginPage() {
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Tên dự án đăng nhập</h1>
-
-        {/* Logo có icon */}
-        <div className="logo-container">
-          <div className="logo">
-            <AreaChart size={22} color="white" />
-          </div>
-        </div>
-
-        {/* Thanh điều hướng đăng nhập / đăng ký */}
-        <nav className="auth-nav">
-          <Link href="/login" className="active">
-            Đăng nhập
-          </Link>
-          <span className="divider">/</span>
-          <Link href="/register" className="auth-link">Đăng ký</Link>
-        </nav>
-
-        {/* Khối đăng nhập với Google có icon chuẩn */}
-        
-
-        <div className="separator">
-          <span>Hoặc với email</span>
-        </div>
-
-        {/* Form đăng nhập với email */}
-        <form className="auth-form" action="" method="get">
-          <div className="input-group">
-            <label>Email</label>
-            <div className="input-wrapper">
-              <Mail className="field-icon" size={16} />
-              <input type="email" placeholder="A@gmail.com" required />
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>Mật khẩu</label>
-            <div className="input-wrapper">
-              <Lock className="field-icon" size={16} />
-              <input type="password" placeholder="••••••••" required />
-            </div>
-          </div>
-          <Link href="#"  className="auth-forget-password">Quên mật khẩu</Link>
-          <button type="submit" className="submit-btn">
-            Đăng nhập
-          </button>
-          <button className="google-btn" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/>
-            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/>
-            <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/>
-            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/>
-          </svg>
-          <span>Đăng nhập với Google</span>
-        </button>
-        </form>
-      </div>
-    </div>
+    <AuthShell
+      eyebrow="Học viện Kỹ thuật Mật mã"
+      showEyebrowDot
+      heroTitlePrefix="Tiếp tục"
+      heroTitleHighlight="hành trình"
+      heroTitleLine2="học tập KMA."
+      heroDescription="Theo dõi lịch học, tính điểm GPA, tra cứu tài liệu và cập nhật thông báo học vụ trong một cổng thống nhất."
+    >
+      <LoginCardForm />
+    </AuthShell>
   );
 }
