@@ -34,8 +34,11 @@
   --admin-line-strong: var(--kma-line-strong);
   --admin-shadow: var(--kma-shadow);
   --admin-shadow-hover: var(--kma-shadow-hover);
-  --admin-display: var(--font-admin-display), var(--font-kma-display), "Lora", Georgia, serif;
-  --admin-body: var(--font-admin-body), var(--font-kma-body), "Be Vietnam Pro", system-ui, sans-serif;
+  --admin-display:
+    var(--font-admin-display), var(--font-kma-display), "Lora", Georgia, serif;
+  --admin-body:
+    var(--font-admin-body), var(--font-kma-body), "Be Vietnam Pro", system-ui,
+    sans-serif;
   --admin-ease: var(--kma-ease);
   --admin-radius-card: var(--kma-radius-card);
   --admin-radius-ctrl: var(--kma-radius-ctrl);
@@ -48,9 +51,20 @@
   background-color: var(--admin-bg);
   background-image:
     radial-gradient(rgba(125, 86, 22, 0.08) 1px, transparent 1px),
-    radial-gradient(55% 40% at 95% 0%, rgba(229, 201, 139, 0.2), transparent 65%),
-    radial-gradient(50% 45% at 15% 100%, rgba(139, 18, 24, 0.075), transparent 65%);
-  background-size: 24px 24px, 100% 100%, 100% 100%;
+    radial-gradient(
+      55% 40% at 95% 0%,
+      rgba(229, 201, 139, 0.2),
+      transparent 65%
+    ),
+    radial-gradient(
+      50% 45% at 15% 100%,
+      rgba(139, 18, 24, 0.075),
+      transparent 65%
+    );
+  background-size:
+    24px 24px,
+    100% 100%,
+    100% 100%;
   color: var(--admin-ink);
   font-family: var(--admin-body);
   font-size: 14.5px;
@@ -133,7 +147,11 @@
   gap: 16px;
   padding: 20px 16px;
   color: #fbf5eb;
-  background: linear-gradient(180deg, var(--admin-sidebar-bg) 0%, var(--admin-sidebar-bg-2) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--admin-sidebar-bg) 0%,
+    var(--admin-sidebar-bg-2) 100%
+  );
   border-right: 1px solid rgba(240, 214, 155, 0.16);
   box-shadow: 6px 0 28px rgba(38, 16, 19, 0.18);
   overflow: hidden;
@@ -147,8 +165,14 @@
   inset: 0;
   background-image:
     radial-gradient(rgba(240, 214, 155, 0.12) 1px, transparent 1px),
-    radial-gradient(circle at 85% 92%, rgba(184, 137, 58, 0.16), transparent 52%);
-  background-size: 18px 18px, 100% 100%;
+    radial-gradient(
+      circle at 85% 92%,
+      rgba(184, 137, 58, 0.16),
+      transparent 52%
+    );
+  background-size:
+    18px 18px,
+    100% 100%;
   opacity: 0.7;
   pointer-events: none;
   z-index: 0;
@@ -294,7 +318,7 @@
 .admin-nav-link:hover {
   color: #ffffff;
   background: rgba(255, 250, 240, 0.1);
-  transform: translateX(2px);
+  transform: translateY(2px);
 }
 
 .admin-nav-link--active {
@@ -331,7 +355,9 @@
   color: #241008;
   background: #f5dfae;
   border: 1px solid #e7c67b;
-  transition: transform 0.2s var(--admin-ease), background-color 0.2s;
+  transition:
+    transform 0.2s var(--admin-ease),
+    background-color 0.2s;
 }
 
 .admin-switch-btn:hover {
@@ -348,7 +374,9 @@
   font-size: 0.83rem;
   font-weight: 500;
   color: rgba(255, 250, 240, 0.84);
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 
 .admin-home-btn:hover {
@@ -446,7 +474,11 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--admin-crimson), var(--admin-crimson-deep));
+  background: linear-gradient(
+    135deg,
+    var(--admin-crimson),
+    var(--admin-crimson-deep)
+  );
   color: #ffffff;
   font-size: 0.78rem;
   font-weight: 700;
@@ -611,7 +643,11 @@
 .admin-btn--primary {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--admin-crimson-hi), var(--admin-crimson));
+  background: linear-gradient(
+    135deg,
+    var(--admin-crimson-hi),
+    var(--admin-crimson)
+  );
   color: #ffffff;
   border-color: var(--admin-crimson);
   box-shadow: 0 8px 18px rgba(139, 18, 24, 0.22);
@@ -634,11 +670,17 @@
   transform: translate3d(-120%, 0, 0) skewX(-24deg);
   opacity: 0;
   pointer-events: none;
-  transition: transform 560ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+  transition:
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
 }
 
 .admin-btn--primary:hover {
-  background: linear-gradient(135deg, var(--admin-crimson), var(--admin-crimson-deep));
+  background: linear-gradient(
+    135deg,
+    var(--admin-crimson),
+    var(--admin-crimson-deep)
+  );
   color: #ffffff;
   border-color: var(--admin-crimson-deep);
 }
@@ -731,7 +773,9 @@
   color: var(--admin-ink);
   font-size: 0.88rem;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .admin-input:focus,

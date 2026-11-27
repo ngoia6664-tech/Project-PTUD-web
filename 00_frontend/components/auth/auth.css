@@ -1,236 +1,1088 @@
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  font-family: sans-serif;
-}
+/* ==========================================================================
+   KMA OVERALL — AUTH PAGES (/login & /register)
+   Hệ màu Giấy Dó (#faf6ef) – Đỏ Son Học Viện (#8b1218) – Vàng Đồng (#b8893a),
+   Tiêu đề Lora (weight <= 700, line-height >= 1.28), nội dung Be Vietnam Pro.
+   Không dùng backdrop-filter, tôn trọng prefers-reduced-motion.
+   ========================================================================== */
 
-.auth-card {
+.kma-auth-root {
+  --auth-bg: #faf6ef;
+  --auth-surface: #fffdf9;
+  --auth-surface-warm: #f9f1e4;
+  --auth-crimson: #8b1218;
+  --auth-crimson-hi: #a41820;
+  --auth-crimson-deep: #6b0c11;
+  --auth-crimson-muted: #b9777b;
+  --auth-crimson-soft: #fdf0f0;
+  --auth-gold: #b8893a;
+  --auth-gold-ink: #7d5616;
+  --auth-jade: #156843;
+  --auth-ink: #221b18;
+  --auth-ink-2: #463a34;
+  --auth-muted: #6b5e55;
+  --auth-line: #e4d8c6;
+  --auth-line-strong: #c8b69e;
+  --auth-display: var(--font-kma-display), "Lora", Georgia, serif;
+  --auth-body: var(--font-kma-body), "Be Vietnam Pro", system-ui, sans-serif;
+  --auth-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background-color: #f8f8f8;
-  width: 380px;
-  padding: 24px;
-  gap: 12px;
-  border: 2px solid #ddd;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  color: black;
+  background-color: var(--auth-bg);
+  color: var(--auth-ink);
+  font-family: var(--auth-body);
+  font-size: 14.5px;
+  line-height: 1.55;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.kma-auth-root *,
+.kma-auth-root *::before,
+.kma-auth-root *::after {
   box-sizing: border-box;
 }
 
-.auth-card h1 {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.logo-container {
-  display: flex;
-  justify-content: center;
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-  background-color: #0070f3;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.auth-nav {
-  display: flex;
-  gap: 6px;
-  font-size: 14px;
-}
-
-.auth-nav a {
-  color: #666;
+.kma-auth-root a {
+  color: inherit;
   text-decoration: none;
 }
 
-.auth-nav a.active,
-.auth-nav .active {
-  color: #0070f3;
-  font-weight: bold;
+.kma-auth-root button,
+.kma-auth-root input {
+  font-family: inherit;
 }
 
-.google-btn {
+.kma-auth-root :focus-visible {
+  outline: 2px solid var(--auth-crimson);
+  outline-offset: 2px;
+}
+
+/* ---------------- Header trên cùng ---------------- */
+.kma-auth-header {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  height: 66px;
+  background: rgba(255, 253, 249, 0.96);
+  border-bottom: 1px solid var(--auth-line);
+}
+
+.kma-auth-header-inner {
+  max-width: 1360px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 28px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kma-auth-brand {
+  display: inline-flex;
+  align-items: center;
   gap: 10px;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: white;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  transition: transform 0.3s,g background 0.2s;
-  
 }
 
-.google-btn:hover {
-  background: #f1f1f1;
-  transform:  scaleX(1.02) translateY(-2%);
-  box-shadow: 0 3px 6px rgba(40, 40, 40, 0.1); /* Bóng tỏa rộng và đậm hơn */
- 
-}
-.google-btn:active {
-  transform: translateY(-1px) scale(0.99); /* Hạ thấp xuống và thu nhỏ nhẹ 2% */
-  box-shadow: 0 1px 2px rgba(40, 40, 40, 0.05); /* Bóng thu hẹp lại sát mặt phẳng */
-  transition-duration: 0.08s; /* Lún xuống nhanh hơn lúc nổi lên để tạo độ nhạy */
+.kma-auth-brand-shield {
+  width: 32px;
+  height: 34px;
+  flex: none;
 }
 
-.separator {
+.kma-auth-brand-text {
   display: flex;
+  flex-direction: column;
+  line-height: 1.24;
+}
+
+.kma-auth-brand-name {
+  font-family: var(--auth-display);
+  font-size: 1.16rem;
+  font-weight: 700;
+  color: var(--auth-ink);
+}
+
+.kma-auth-brand-name b {
+  color: var(--auth-crimson);
+  font-weight: 700;
+}
+
+.kma-auth-brand-sub {
+  font-size: 0.74rem;
+  color: var(--auth-muted);
+}
+
+.kma-auth-help-btn {
+  display: inline-flex;
   align-items: center;
-  width: 100%;
-  text-align: center;
-  color: #888;
-  font-size: 11px;
-}
-
-.separator::before,
-.separator::after {
-  content: "";
-  flex: 1;
-  border-bottom: 1px solid #ddd;
-}
-
-.separator span {
-  padding: 0 8px;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.input-group label {
-  font-size: 12px;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 18, 24, 0.48);
+  background: var(--auth-surface);
+  color: var(--auth-crimson);
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #333;
+  cursor: pointer;
+  transition:
+    background-color 180ms var(--auth-ease),
+    border-color 180ms var(--auth-ease),
+    transform 180ms var(--auth-ease);
 }
 
-/* Khung bọc input và icon bên trong */
-.input-wrapper {
+.kma-auth-help-btn:hover {
+  background: var(--auth-crimson-soft);
+  border-color: var(--auth-crimson);
+  transform: translateY(-1px);
+}
+
+.kma-auth-help-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ---------------- Thân chính 2 cột trên nền Học viện KMA ---------------- */
+.kma-auth-stage {
   position: relative;
+  flex: 1;
   display: flex;
   align-items: center;
+  overflow: hidden;
+  background-color: var(--auth-bg);
+  background-image: radial-gradient(
+    rgba(184, 137, 58, 0.14) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
 }
 
-.field-icon {
+.kma-auth-bg-art {
   position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #888;
+  inset: 0;
+  background-image: url("/assets/kma-auth-bg.jpg");
+  background-size: cover;
+  background-position: left bottom;
+  background-repeat: no-repeat;
   pointer-events: none;
+  z-index: 0;
 }
 
-.input-wrapper input {
+/* Lớp chuyển mượt từ tranh Học viện sang nền Giấy Dó chấm mảnh bên phải */
+.kma-auth-bg-fade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(250, 246, 239, 0.08) 0%,
+      rgba(250, 246, 239, 0.04) 44%,
+      rgba(250, 246, 239, 0.72) 60%,
+      rgba(250, 246, 239, 0.96) 74%,
+      rgba(250, 246, 239, 0.98) 100%
+    ),
+    radial-gradient(
+      46% 36% at 16% 18%,
+      rgba(255, 251, 244, 0.72) 0%,
+      rgba(255, 251, 244, 0.25) 60%,
+      transparent 100%
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.kma-auth-stage-inner {
+  position: relative;
+  z-index: 2;
   width: 100%;
-  padding: 8px 10px 8px 34px; /* Chừa khoảng trống bên trái cho icon */
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 13px;
-  outline: none;
-  background: #fff;
-  transition: border-color 0.2s;
-  box-sizing: border-box;
-}
-
-.input-wrapper input:focus {
-  border-color: #0070f3;
-}
-
-.checkbox-group {
-  display: flex;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 32px 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 480px);
   align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: #444;
-  margin-top: 2px;
+  gap: 40px;
 }
 
-.checkbox-group input {
-  cursor: pointer;
+/* Cột trái: Tiêu đề cảm hứng */
+.kma-auth-hero {
+  align-self: start;
+  padding-top: 28px;
+  padding-left: 32px;
+  max-width: 540px;
 }
 
-.submit-btn {
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s ,transform 0.2s;
+.kma-auth-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--auth-gold-ink);
+  margin-bottom: 12px;
+}
+
+.kma-auth-eyebrow-line {
+  width: 28px;
+  height: 1.8px;
+  border-radius: 999px;
+  background: var(--auth-gold);
+}
+
+.kma-auth-eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--auth-crimson);
+  flex: none;
+}
+
+.kma-auth-hero-title {
+  margin: 0;
+  font-family: var(--auth-display);
+  font-size: clamp(2.15rem, 3.8vw, 3.15rem);
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--auth-ink);
+  text-shadow: 0 2px 14px rgba(255, 251, 244, 0.85);
+}
+
+.kma-auth-hero-title span {
+  color: var(--auth-crimson);
+}
+
+.kma-auth-hero-arc {
+  display: block;
+  width: 230px;
+  height: 24px;
   margin-top: 4px;
 }
 
-.submit-btn:hover {
-  background-color: #0051a2;
-  transform: translateY(-2%);
-  box-shadow: 0 3px 6px rgba(40, 40, 40, 0.1); /* Bóng tỏa rộng và đậm hơn */
-  transform: scaleX(1.02);
-}
-.submit-btn:active {
-  transform: translateY(-1px) scale(0.99); /* Hạ thấp xuống và thu nhỏ nhẹ 2% */
-  box-shadow: 0 1px 2px rgba(40, 40, 40, 0.05); /* Bóng thu hẹp lại sát mặt phẳng */
-  transition-duration: 0.08s; /* Lún xuống nhanh hơn lúc nổi lên để tạo độ nhạy */
-}
-.auth-link {
-  position: relative;
-}
-.auth-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 2px;
-  background-color: #0070f3;
-  transition: width 0.3s;
-}
-.auth-link:hover::after{
-  width: 100%;
+/* Cột phải: Thẻ biểu mẫu trắng ngà */
+.kma-auth-card-col {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.auth-forget-password {
-  position: relative;
-  width: fit-content; 
-  font-size: 12px;
-  color: #0070f3;
-  font-weight: bold;
+@keyframes kma-auth-card-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
-.auth-forget-password::after {
+
+.kma-auth-card {
+  width: 100%;
+  max-width: 472px;
+  background: var(--auth-surface);
+  border: 1px solid var(--auth-line);
+  border-radius: 22px;
+  padding: 36px 34px 32px;
+  box-shadow:
+    0 4px 14px rgba(72, 42, 18, 0.05),
+    0 20px 48px rgba(72, 42, 18, 0.09);
+  animation: kma-auth-card-in 260ms var(--auth-ease) both;
+}
+
+.kma-auth-card--register {
+  padding: 28px 32px 26px;
+}
+
+/* Tiêu đề form Đăng nhập (căn giữa) */
+.kma-auth-card-head-center {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.kma-auth-card-title {
+  margin: 0 0 6px;
+  font-family: var(--auth-display);
+  font-size: clamp(1.65rem, 2.3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--auth-ink);
+}
+
+.kma-auth-card-title span {
+  color: var(--auth-crimson);
+}
+
+.kma-auth-card-sub {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--auth-muted);
+}
+
+/* Tiêu đề form Đăng ký (icon kem bên trái + chữ bên phải đúng Ảnh 2) */
+.kma-auth-card-head-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.kma-auth-register-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--auth-surface-warm);
+  border: 1px solid var(--auth-line);
+  color: var(--auth-crimson);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.kma-auth-card-head-row .kma-auth-card-title {
+  font-size: 1.62rem;
+  margin-bottom: 2px;
+}
+
+/* Biểu mẫu & ô nhập */
+.kma-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.kma-auth-form--compact {
+  gap: 12px;
+}
+
+.kma-auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.kma-auth-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.kma-auth-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--auth-muted);
+  pointer-events: none;
+  transition: color 180ms ease;
+}
+
+.kma-auth-input-wrap:focus-within .kma-auth-input-icon {
+  color: var(--auth-crimson);
+}
+
+.kma-auth-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px 0 42px;
+  border-radius: 12px;
+  border: 1px solid var(--auth-line-strong);
+  background: #ffffff;
+  color: var(--auth-ink);
+  font-size: 0.92rem;
+  outline: none;
+  transition:
+    border-color 180ms var(--auth-ease),
+    box-shadow 180ms var(--auth-ease),
+    background-color 180ms ease;
+}
+
+.kma-auth-input--with-eye {
+  padding-right: 44px;
+}
+
+.kma-auth-input::placeholder {
+  color: #7c6f65;
+  opacity: 1;
+}
+
+.kma-auth-input:hover {
+  border-color: #a99276;
+}
+
+.kma-auth-input:focus {
+  border-color: var(--auth-crimson);
+  box-shadow: 0 0 0 3px rgba(139, 18, 24, 0.11);
+}
+
+.kma-auth-eye-btn {
+  position: absolute;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--auth-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.kma-auth-eye-btn:hover {
+  background: var(--auth-surface-warm);
+  color: var(--auth-ink);
+}
+
+.kma-auth-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--auth-muted);
+  padding-left: 2px;
+}
+
+.kma-auth-hint--ok {
+  color: var(--auth-jade);
+  font-weight: 500;
+}
+
+.kma-auth-hint--err {
+  color: var(--auth-crimson);
+  font-weight: 500;
+}
+
+/* Hàng ghi nhớ / đồng ý điều khoản */
+.kma-auth-row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.kma-auth-checkbox-label {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 0.85rem;
+  color: var(--auth-ink-2);
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.45;
+}
+
+.kma-auth-checkbox {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--auth-crimson);
+  cursor: pointer;
+  flex: none;
+}
+
+.kma-auth-inline-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--auth-crimson);
+  font-size: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.kma-auth-inline-link:hover {
+  color: var(--auth-crimson-deep);
+}
+
+/* Nút chính pill đỏ son */
+.kma-auth-submit {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 46px;
+  margin-top: 4px;
+  border: 1px solid var(--auth-crimson);
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--auth-crimson-hi) 0%,
+    var(--auth-crimson) 100%
+  );
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(139, 18, 24, 0.24);
+  transition:
+    transform 180ms var(--auth-ease),
+    box-shadow 180ms var(--auth-ease),
+    background-color 180ms ease,
+    opacity 180ms ease;
+}
+
+.kma-auth-submit::after {
   content: "";
   position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 2px;
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-  background-color: #0070f3;
+  top: -20%;
+  left: -45%;
+  width: 36%;
+  height: 140%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 248, 232, 0.34),
+    transparent
+  );
+  transform: translate3d(-120%, 0, 0) skewX(-24deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 540ms var(--auth-ease), opacity 180ms ease;
 }
-.auth-forget-password:hover::after {
-  transform: scaleX(1);
+
+.kma-auth-submit:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    var(--auth-crimson) 0%,
+    var(--auth-crimson-deep) 100%
+  );
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(139, 18, 24, 0.32);
+}
+
+.kma-auth-submit:hover:not(:disabled)::after {
+  transform: translate3d(420%, 0, 0) skewX(-24deg);
+  opacity: 1;
+}
+
+.kma-auth-submit:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+
+/* Trạng thái nút Đăng ký khi chưa đủ điều kiện / chưa đồng ý (giống Ảnh 2) */
+.kma-auth-submit:disabled {
+  background: var(--auth-crimson-muted);
+  border-color: var(--auth-crimson-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Đường phân cách "hoặc" */
+.kma-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 4px 0;
+  color: var(--auth-muted);
+  font-size: 0.84rem;
+}
+
+.kma-auth-divider::before,
+.kma-auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--auth-line);
+}
+
+/* Nút tiếp tục với Google */
+.kma-auth-google {
+  width: 100%;
+  height: 46px;
+  border-radius: 999px;
+  border: 1px solid var(--auth-line-strong);
+  background: #ffffff;
+  color: var(--auth-ink);
+  font-size: 0.92rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms var(--auth-ease),
+    box-shadow 180ms ease;
+}
+
+.kma-auth-google:hover {
+  background: var(--auth-surface-warm);
+  border-color: #a99276;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(72, 42, 18, 0.08);
+}
+
+.kma-auth-google:active {
+  transform: translateY(0) scale(0.985);
+}
+
+/* Dòng chuyển trang cuối thẻ */
+.kma-auth-switch {
+  margin: 6px 0 0;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--auth-muted);
+}
+
+.kma-auth-switch a {
+  color: var(--auth-crimson);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.kma-auth-switch a:hover {
+  color: var(--auth-crimson-deep);
+}
+
+/* Hộp thông báo trạng thái ngay trong form */
+.kma-auth-alert {
+  padding: 10px 13px;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.kma-auth-alert--error {
+  background: var(--auth-crimson-soft);
+  border: 1px solid rgba(139, 18, 24, 0.34);
+  color: var(--auth-crimson-deep);
+}
+
+.kma-auth-alert--success {
+  background: #e7f6ee;
+  border: 1px solid rgba(21, 104, 67, 0.36);
+  color: #104e31;
+}
+
+/* ---------------- Footer đáy trang ---------------- */
+.kma-auth-footer {
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 253, 249, 0.96);
+  border-top: 1px solid var(--auth-line);
+}
+
+.kma-auth-footer-inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 14px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: var(--auth-muted);
+}
+
+.kma-auth-copyright {
+  margin: 0;
+}
+
+.kma-auth-footer-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kma-auth-footer-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--auth-ink-2);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.kma-auth-footer-link:hover {
+  color: var(--auth-crimson);
+}
+
+.kma-auth-footer-sep {
+  color: var(--auth-line-strong);
+}
+
+/* ---------------- Modal Điều khoản & Quyền riêng tư (Ảnh 3 & Ảnh 4) ---------------- */
+@keyframes kma-auth-modal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.kma-auth-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(28, 18, 16, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.kma-auth-modal {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: min(86vh, 720px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 28px 24px;
+  border-radius: 22px;
+  background: var(--auth-surface);
+  border: 1px solid var(--auth-line-strong);
+  box-shadow: 0 24px 60px rgba(24, 12, 14, 0.28);
+  animation: kma-auth-modal-in 200ms var(--auth-ease) both;
+}
+
+.kma-auth-modal--sm {
+  width: min(460px, 100%);
+}
+
+.kma-auth-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--auth-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.kma-auth-modal-close:hover {
+  background: var(--auth-surface-warm);
+  color: var(--auth-crimson);
+}
+
+.kma-auth-modal-head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.kma-auth-shield-ornament {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.kma-auth-ornament-line {
+  width: 48px;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--auth-gold),
+    transparent
+  );
+}
+
+.kma-auth-terms-badge {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: var(--auth-surface-warm);
+  border: 1px solid var(--auth-line);
+  color: var(--auth-gold-ink);
+  display: grid;
+  place-items: center;
+  margin-bottom: 4px;
+}
+
+.kma-auth-modal-title {
+  margin: 0;
+  font-family: var(--auth-display);
+  font-size: clamp(1.55rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--auth-ink);
+}
+
+.kma-auth-modal-title span,
+.kma-auth-modal-title--crimson {
+  color: var(--auth-crimson);
+}
+
+.kma-auth-modal-sub {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--auth-muted);
+}
+
+/* Vùng nội dung cuộn được trong modal */
+.kma-auth-modal-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid var(--auth-line);
+}
+
+.kma-auth-modal-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.kma-auth-modal-scroll::-webkit-scrollbar-thumb {
+  background: #cbbba6;
+  border-radius: 999px;
+}
+
+/* Nội dung Modal Quyền riêng tư (Ảnh 3) */
+.kma-auth-privacy-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+}
+
+.kma-auth-privacy-row:first-child {
+  padding-top: 2px;
+}
+
+.kma-auth-privacy-row:last-child {
+  padding-bottom: 2px;
+}
+
+.kma-auth-privacy-row--sep {
+  border-top: 1px solid #f0e7d9;
+}
+
+.kma-auth-privacy-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--auth-surface-warm);
+  border: 1px solid var(--auth-line);
+  color: var(--auth-gold-ink);
+  display: grid;
+  place-items: center;
+  flex: none;
+  margin-top: 2px;
+}
+
+.kma-auth-privacy-row h3 {
+  margin: 0 0 4px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--auth-ink);
+}
+
+.kma-auth-privacy-row p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.56;
+  color: var(--auth-ink-2);
+}
+
+/* Nội dung Modal Điều khoản dịch vụ (Ảnh 4) */
+.kma-auth-terms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kma-auth-terms-item h3 {
+  margin: 0 0 5px;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--auth-ink);
+}
+
+.kma-auth-terms-item p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.58;
+  color: var(--auth-ink-2);
+}
+
+.kma-auth-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kma-auth-reset-done {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #e7f6ee;
+  border: 1px solid rgba(21, 104, 67, 0.35);
+  color: #104e31;
+}
+
+.kma-auth-reset-done strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.92rem;
+}
+
+.kma-auth-reset-done p {
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+/* Hàng nút chân modal */
+.kma-auth-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.kma-auth-btn-outline,
+.kma-auth-btn-primary {
+  min-width: 146px;
+  height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 160ms var(--auth-ease),
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.kma-auth-btn-outline {
+  background: var(--auth-surface);
+  color: var(--auth-ink);
+  border: 1px solid var(--auth-line-strong);
+}
+
+.kma-auth-btn-outline:hover {
+  background: var(--auth-surface-warm);
+  border-color: var(--auth-crimson);
+  color: var(--auth-crimson);
+}
+
+.kma-auth-btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--auth-crimson-hi),
+    var(--auth-crimson)
+  );
+  color: #ffffff;
+  border: 1px solid var(--auth-crimson);
+  box-shadow: 0 8px 18px rgba(139, 18, 24, 0.24);
+}
+
+.kma-auth-btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    var(--auth-crimson),
+    var(--auth-crimson-deep)
+  );
+  transform: translateY(-1px);
+}
+
+.kma-auth-btn-outline:active,
+.kma-auth-btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 1020px) {
+  .kma-auth-stage-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 28px 20px 36px;
+  }
+
+  .kma-auth-bg-fade {
+    background: linear-gradient(
+      180deg,
+      rgba(250, 246, 239, 0.56) 0%,
+      rgba(250, 246, 239, 0.88) 42%,
+      rgba(250, 246, 239, 0.96) 100%
+    );
+  }
+
+  .kma-auth-hero {
+    padding: 4px 0 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .kma-auth-hero-arc {
+    margin: 4px auto 0;
+  }
+
+  .kma-auth-card-col {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .kma-auth-header-inner,
+  .kma-auth-footer-inner {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .kma-auth-card,
+  .kma-auth-card--register {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .kma-auth-modal {
+    padding: 22px 18px 20px;
+  }
+
+  .kma-auth-modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .kma-auth-btn-outline,
+  .kma-auth-btn-primary {
+    width: 100%;
+  }
+
+  .kma-auth-footer-inner {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* Tôn trọng prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .kma-auth-root *,
+  .kma-auth-root *::before,
+  .kma-auth-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
