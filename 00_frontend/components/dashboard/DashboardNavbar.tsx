@@ -29,6 +29,7 @@ import {
   X,
 } from "lucide-react";
 import type { User } from "@/lib/mock/dashboard";
+import { clearAuthToken } from "@/lib/api";
 
 /**
  * Thanh điều hướng trên cùng (Top Navbar) khu sinh viên theo đặc tả Q4:
@@ -348,7 +349,10 @@ export default function DashboardNavbar({
                   href="/login"
                   className="dash-dropdown-item"
                   role="menuitem"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => {
+                    clearAuthToken();
+                    setMenuOpen(false);
+                  }}
                 >
                   <LogOut size={16} />
                   Đăng xuất
@@ -502,7 +506,10 @@ export default function DashboardNavbar({
           <Link
             href="/login"
             className="dash-btn dash-btn--sm"
-            onClick={() => setDrawerOpen(false)}
+            onClick={() => {
+              clearAuthToken();
+              setDrawerOpen(false);
+            }}
           >
             <LogOut size={15} />
             Đăng xuất

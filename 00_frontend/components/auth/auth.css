@@ -371,6 +371,17 @@
   gap: 11px;
 }
 
+.kma-auth-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.kma-auth-select {
+  appearance: auto;
+  cursor: pointer;
+}
+
 .kma-auth-field {
   display: flex;
   flex-direction: column;
@@ -1190,7 +1201,8 @@
     padding-right: 16px;
   }
 
-  .kma-auth-grid-2 {
+  .kma-auth-grid-2,
+  .kma-auth-grid-3 {
     grid-template-columns: 1fr;
   }
 
