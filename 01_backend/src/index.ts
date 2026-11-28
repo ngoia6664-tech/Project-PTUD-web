@@ -3,8 +3,10 @@ import express from "express";
 import { pool } from "./db/pool";
 import authRouter from "./routes/auth";
 import gradesRouter from "./routes/grades";
+import cors from "cors";
 const app = express();
 app.use(express.json());
+app.use(cors({ origin: "http://localhost:3000" }));
 
 app.get("/api/health", async (_req, res) => {
   try {
