@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { DongCoTin, tinhGPA, xuLyBangDiem } from "../utils/tachBangDiem";
+import { getSnapshots, saveSnapShot } from "../queries/gradesQueries";
 // xử lí bảng điểm của các môn cho hợp lệ trước
 export function PhanTichBangDiem(req: Request, res: Response) {
   const { text } = req.body ?? {};
@@ -60,5 +61,65 @@ export function TinhGPA(req: Request, res: Response) {
   } catch (error: any) {
     console.log("[CATCH] báo lỗi :" + error.message);
     res.status(400).json({ message: "Tính GPA không thành công", ok: false });
+  }
+}
+export async function saveSnapShotControllers(req: Request, res: Response) {
+  const data = req.body ?? {};
+  const { courses } = data ?? {};
+  const user_id = res.locals.user.id;
+  // courses không phải mảng
+  if (!Array.isArray(courses)) {
+    res
+      .status(400)
+      .json({ message: "Dữ liệu truyền vào không phải mảng", ok: false });
+    return;
+  }
+  //courses .length = 0 và 100
+  if (courses.length === 0 || courses.length > 100) {
+    res.status(400).json({
+      message: "Mảng truyền vào có kích thước không hợp lệ",
+      ok: false,
+    });
+    return;
+  }
+  for (const dong of courses) {
+    // mỗi phần tử phải là object thật (không phải null, số, chuỗi hay mảng)
+    if (typeof dong !== "object" || dong === null || Array.isArray(dong)) {
+      res.status(400).json({
+        message: "phần tử trong mảng không phải là Object",
+        ok: false,
+      });
+      return;
+    }
+    if (!Number.isInteger(dong.tinChi) || dong.tinChi < 1 || dong.tinChi > 10) {
+      res
+        .status(400)
+        .json({ message: "Mảng có tín chỉ không hợp lệ", ok: false });
+      return;
+    }
+  }
+  try {
+    await saveSnapShot(user_id as number, courses as DongCoTin[]);
+    res
+      .status(200)
+      .json({ message: "Lưu môn lên server thành công", ok: true });
+  } catch (error: any) {
+    console.log("CATCH Controller bắt lỗi:" + error.message);
+    res.status(500).json({ message: "Lỗi server", ok: false });
+  }
+  //courses có tín chỉ <1 > 10
+}
+export async function getSnapShotControllers(req: Request, res: Response) {
+  const user_id = res.locals.user.id;
+  try {
+    const kq = await getSnapshots(user_id);
+    res.status(200).json({
+      message: "Lấy kết quả thành công",
+      ok: true,
+      courses: kq ?? [], // chưa lưu gì thì trả mảng rỗng, không phải lỗi
+    });
+  } catch (error: any) {
+    console.log("CATCH Controller bắt lỗi:" + error.message);
+    res.status(500).json({ message: "Lỗi server", ok: false });
   }
 }
