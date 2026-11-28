@@ -1,15 +1,14 @@
 "use client";
 
-import { Plus, Trash2 } from "lucide-react";
+import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 
 /**
  * Bảng điểm chi tiết theo đúng cấu trúc cổng KMA:
- * # | Năm học | Học kỳ | Môn thi | Lần | TP1 | TP2 | ĐQT | Điểm thi | Điểm HP | Điểm chữ | Thang 4 | Tín chỉ *
+ * # | Năm học | Học kỳ | Môn thi | Lần | TP1 | TP2 | ĐQT | Điểm thi | Điểm HP | Điểm chữ | Thang 4 | Tín chỉ * | Thao tác
  *
- * Công thức tự động cập nhật theo state khi nhập tay:
- * - ĐQT = 0.7 * TP1 + 0.3 * TP2 (làm tròn 1 chữ số thập phân)
- * - Điểm HP = 0.21 * TP1 + 0.09 * TP2 + 0.7 * Điểm thi
- *   (hoặc 0.3 * ĐQT + 0.7 * Điểm thi nếu nhập ĐQT trực tiếp; vẫn cho gõ thẳng Điểm HP)
+ * - Mỗi dòng đều có nút Sửa (Pencil) / Xong (Check) và nút Xóa (Trash2).
+ * - ĐQT và Điểm HP luôn chỉ đọc (không cho input), tự động tính theo state:
+ *   ĐQT = 0.7 * TP1 + 0.3 * TP2; Điểm HP = 0.21 * TP1 + 0.09 * TP2 + 0.7 * Điểm thi.
  * - Đổi Điểm HP sang Điểm chữ: làm tròn 1 chữ số, rồi >=9 A+, >=8.5 A, >=7.8 B+,
  *   >=7 B, >=6.3 C+, >=5.5 C, >=4.8 D+, >=4 D, còn lại F; chặn điểm ngoài 0–10.
  */
@@ -83,6 +82,7 @@ export function letterToScore4(letter: string): number | null {
 export interface GpaCourseRow {
   id: string;
   source: "parsed" | "manual";
+  isEditing: boolean;
   namHoc: string;
   hocKyInput: string;
   mon: string;
@@ -91,7 +91,7 @@ export interface GpaCourseRow {
   tp2Input: string;
   dqtInput: string;
   diemThiInput: string;
-  /** Điểm HP (thang 10) */
+  /** Điểm HP (thang 10 — chỉ đọc, tự tính từ TP1, TP2 và Điểm thi) */
   score10Input: string;
   diemChu: string;
   /** Số tín chỉ (chuỗi nguyên 1–10, bắt buộc) */
@@ -115,6 +115,7 @@ interface GpaTableProps {
     id: string,
     patch: Partial<Omit<GpaCourseRow, "id" | "source">>,
   ) => void;
+  onToggleEditRow: (id: string) => void;
   onAddManualRow: () => void;
   onDeleteRow: (id: string) => void;
   onClearAll: () => void;
@@ -124,6 +125,7 @@ export default function GpaTable({
   rows,
   rowErrors,
   onChangeRow,
+  onToggleEditRow,
   onAddManualRow,
   onDeleteRow,
   onClearAll,
@@ -185,9 +187,9 @@ export default function GpaTable({
               color: "#5c5249",
             }}
           >
-            Khi nhập tay: điền <strong>TP1, TP2</strong> và{" "}
-            <strong>Điểm thi</strong> (0–10) — hệ thống tự tính{" "}
-            <strong>ĐQT</strong> (= 0,7×TP1 + 0,3×TP2),{" "}
+            Bấm biểu tượng bút chì để sửa bất kỳ môn nào. Khi sửa{" "}
+            <strong>TP1, TP2</strong> và <strong>Điểm thi</strong> (0–10), hệ
+            thống tự tính <strong>ĐQT</strong> (= 0,7×TP1 + 0,3×TP2),{" "}
             <strong>Điểm HP</strong> (= 0,21×TP1 + 0,09×TP2 + 0,7×Điểm thi) và{" "}
             <strong>Điểm chữ</strong>.
           </p>
@@ -242,20 +244,20 @@ export default function GpaTable({
                 <th style={{ width: 64, textAlign: "center" }}>Lần</th>
                 <th style={{ width: 78, textAlign: "center" }}>TP1</th>
                 <th style={{ width: 78, textAlign: "center" }}>TP2</th>
-                <th style={{ width: 78, textAlign: "center" }}>ĐQT</th>
+                <th style={{ width: 74, textAlign: "center" }}>ĐQT</th>
                 <th style={{ width: 84, textAlign: "center" }}>Điểm thi</th>
-                <th style={{ width: 86, textAlign: "center" }}>Điểm HP</th>
+                <th style={{ width: 82, textAlign: "center" }}>Điểm HP</th>
                 <th style={{ width: 82, textAlign: "center" }}>Điểm chữ</th>
                 <th style={{ width: 74, textAlign: "center" }}>Thang 4</th>
                 <th style={{ width: 88, textAlign: "center" }}>Tín chỉ *</th>
-                <th style={{ width: 44 }}></th>
+                <th style={{ width: 82, textAlign: "center" }}>Thao tác</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row, idx) => {
                 const err = rowErrors[row.id];
                 const score4 = letterToScore4(row.diemChu);
-                const isManual = row.source === "manual";
+                const editable = row.isEditing;
 
                 const tp1Err =
                   err?.tp1 ??
@@ -268,7 +270,12 @@ export default function GpaTable({
                   (isInvalidScoreInput(row.diemThiInput) ? "0–10" : undefined);
 
                 return (
-                  <tr key={row.id}>
+                  <tr
+                    key={row.id}
+                    style={
+                      editable ? { background: "#fdf9f1" } : undefined
+                    }
+                  >
                     <td
                       className="dash-num"
                       style={{
@@ -282,7 +289,7 @@ export default function GpaTable({
 
                     {/* Năm học */}
                     <td>
-                      {isManual ? (
+                      {editable ? (
                         <input
                           type="text"
                           className="dash-input dash-num"
@@ -310,7 +317,7 @@ export default function GpaTable({
 
                     {/* Học kỳ */}
                     <td style={{ textAlign: "center" }}>
-                      {isManual ? (
+                      {editable ? (
                         <input
                           type="number"
                           min={1}
@@ -334,7 +341,7 @@ export default function GpaTable({
 
                     {/* Môn thi */}
                     <td>
-                      {isManual ? (
+                      {editable ? (
                         <div>
                           <input
                             type="text"
@@ -366,14 +373,14 @@ export default function GpaTable({
                         </div>
                       ) : (
                         <strong style={{ fontSize: "0.88rem" }}>
-                          {row.mon}
+                          {row.mon || "—"}
                         </strong>
                       )}
                     </td>
 
                     {/* Lần */}
                     <td style={{ textAlign: "center" }}>
-                      {isManual ? (
+                      {editable ? (
                         <input
                           type="number"
                           min={1}
@@ -397,7 +404,7 @@ export default function GpaTable({
 
                     {/* TP1 */}
                     <td style={{ textAlign: "center" }}>
-                      {isManual ? (
+                      {editable ? (
                         <div>
                           <input
                             type="number"
@@ -431,7 +438,12 @@ export default function GpaTable({
                           )}
                         </div>
                       ) : (
-                        <span className="dash-num" style={{ color: "#84776c" }}>
+                        <span
+                          className="dash-num"
+                          style={{
+                            color: row.tp1Input ? "#3a312b" : "#84776c",
+                          }}
+                        >
                           {row.tp1Input || "—"}
                         </span>
                       )}
@@ -439,7 +451,7 @@ export default function GpaTable({
 
                     {/* TP2 */}
                     <td style={{ textAlign: "center" }}>
-                      {isManual ? (
+                      {editable ? (
                         <div>
                           <input
                             type="number"
@@ -473,7 +485,12 @@ export default function GpaTable({
                           )}
                         </div>
                       ) : (
-                        <span className="dash-num" style={{ color: "#84776c" }}>
+                        <span
+                          className="dash-num"
+                          style={{
+                            color: row.tp2Input ? "#3a312b" : "#84776c",
+                          }}
+                        >
                           {row.tp2Input || "—"}
                         </span>
                       )}
@@ -494,7 +511,7 @@ export default function GpaTable({
 
                     {/* Điểm thi */}
                     <td style={{ textAlign: "center" }}>
-                      {isManual ? (
+                      {editable ? (
                         <div>
                           <input
                             type="number"
@@ -528,7 +545,13 @@ export default function GpaTable({
                           )}
                         </div>
                       ) : (
-                        <span className="dash-num" style={{ fontSize: "0.86rem" }}>
+                        <span
+                          className="dash-num"
+                          style={{
+                            fontSize: "0.86rem",
+                            color: row.diemThiInput ? "#1e1916" : "#84776c",
+                          }}
+                        >
                           {row.diemThiInput || "—"}
                         </span>
                       )}
@@ -612,17 +635,51 @@ export default function GpaTable({
                       </div>
                     </td>
 
-                    {/* Xóa */}
+                    {/* Thao tác: Sửa / Xong + Xóa */}
                     <td>
-                      <button
-                        type="button"
-                        className="dash-mini-icon-btn"
-                        onClick={() => onDeleteRow(row.id)}
-                        aria-label={`Xóa môn ${row.mon || "này"}`}
-                        title="Xóa môn"
+                      <div
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 6,
+                        }}
                       >
-                        <Trash2 size={13} color="#8b1218" />
-                      </button>
+                        <button
+                          type="button"
+                          className="dash-mini-icon-btn"
+                          style={
+                            editable
+                              ? {
+                                  background: "#e7f6ee",
+                                  borderColor: "rgba(21, 104, 67, 0.45)",
+                                }
+                              : undefined
+                          }
+                          onClick={() => onToggleEditRow(row.id)}
+                          aria-label={
+                            editable
+                              ? `Xong chỉnh sửa ${row.mon || "môn này"}`
+                              : `Sửa môn ${row.mon || "này"}`
+                          }
+                          title={editable ? "Xong" : "Sửa môn"}
+                        >
+                          {editable ? (
+                            <Check size={13} color="#156843" />
+                          ) : (
+                            <Pencil size={13} color="#7d5616" />
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          className="dash-mini-icon-btn"
+                          onClick={() => onDeleteRow(row.id)}
+                          aria-label={`Xóa môn ${row.mon || "này"}`}
+                          title="Xóa môn"
+                        >
+                          <Trash2 size={13} color="#8b1218" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
